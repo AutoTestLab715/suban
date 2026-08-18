@@ -1,0 +1,145 @@
+<view class="page">
+  <nav-bar title="管理后台" showBack="{{false}}" showAccount="{{true}}" />
+
+  <view class="admin-menu">
+    <view class="menu-item" bindtap="goForms">
+      <view class="menu-label">表单管理</view>
+    </view>
+    <view class="menu-item" bindtap="goNotifySettings">
+      <view class="menu-label">消息通知</view>
+    </view>
+    <view class="menu-item" bindtap="goWebLogin">
+      <view class="menu-label">网页登录</view>
+    </view>
+    <view class="menu-item" bindtap="goBackup">
+      <view class="menu-label">数据备份</view>
+    </view>
+  </view>
+
+  <view wx:if="{{notifyTip}}" class="notify-banner" bindtap="goNotifySettings">
+    <text class="notify-banner-text">{{notifyTip}}</text>
+    <text class="notify-banner-link">去设置 →</text>
+  </view>
+
+  <view class="stats-row">
+    <view class="stat-card {{filter === 'all' ? 'active' : ''}}" bindtap="onFilter" data-status="all">
+      <view class="stat-num">{{stats.total}}</view>
+      <view class="stat-label">全部</view>
+    </view>
+    <view class="stat-card pending {{filter === 'pending' ? 'active' : ''}}" bindtap="onFilter" data-status="pending">
+      <view class="stat-num">{{stats.pending}}</view>
+      <view class="stat-label">待处理</view>
+    </view>
+    <view class="stat-card processed {{filter === 'processed' ? 'active' : ''}}" bindtap="onFilter" data-status="processed">
+      <view class="stat-num">{{stats.processed}}</view>
+      <view class="stat-label">已处理</view>
+    </view>
+    <view class="stat-card {{filter === 'rejected' ? 'active' : ''}}" bindtap="onFilter" data-status="rejected">
+      <view class="stat-num">{{stats.rejected || 0}}</view>
+      <view class="stat-label">已拒绝</view>
+    </view>
+  </view>
+
+  <view class="filter-row">
+    <input class="phone-input" placeholder="手机号筛选" value="{{phone}}" bindinput="onPhoneInput" bindconfirm="onPhoneConfirm" />
+  </view>
+  <scroll-view wx:if="{{formOptions.length}}" class="type-row" scroll-x>
+    <view class="type-pill {{!templateId ? 'active' : ''}}" bindtap="onFormFilter" data-id="">全部表单</view>
+    <view
+      class="type-pill {{templateId === item._id ? 'active' : ''}}"
+      wx:for="{{formOptions}}"
+      wx:key="_id"
+      bindtap="onFormFilter"
+      data-id="{{item._id}}"
+    >{{item.title}}</view>
+  </scroll-view>
+  <scroll-view wx:if="{{typeOptions.length}}" class="type-row" scroll-x>
+    <view class="type-pill {{!typeValue ? 'active' : ''}}" bindtap="onTypeFilter" data-value="">全部类型</view>
+    <view
+      class="type-pill {{typeValue === item ? 'active' : ''}}"
+      wx:for="{{typeOptions}}"
+      wx:key="*this"
+      bindtap="onTypeFilter"
+      data-value="{{item}}"
+    >{{item}}</view>
+  </scroll-view>
+
+  <view class="toolbar">
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="搜索姓名、手机号、表单编号..."
+        value="{{keyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
+      />
+      <view wx:if="{{keyword}}" class="search-clear" bindtap="onClearSearch">×</view>
+    </view>
+    <button class="export-btn" size="mini" bindtap="onCustomExport">自定义</button>
+    <button class="export-btn" size="mini" bindtap="onExport" loading="{{exporting}}" disabled="{{exporting}}">
+      导出
+    </button>
+  </view>
+
+  <view class="date-row">
+    <view class="date-group">
+      <picker mode="date" value="{{dateFrom}}" bindchange="onDateFromChange">
+        <view class="date-pill {{dateFrom ? 'active' : ''}}">{{dateFrom || '开始日期'}}</view>
+      </picker>
+      <text class="date-sep">至</text>
+      <picker mode="date" value="{{dateTo}}" bindchange="onDateToChange">
+        <view class="date-pill {{dateTo ? 'active' : ''}}">{{dateTo || '结束日期'}}</view>
+      </picker>
+      <view wx:if="{{dateFrom || dateTo}}" class="date-clear" bindtap="onClearDates">清除</view>
+    </view>
+    <view class="batch-toggle-btn {{selectMode ? 'active' : ''}}" bindtap="toggleSelectMode">
+      {{selectMode ? '取消批量' : '批量操作'}}
+    </view>
+  </view>
+
+  <view wx:if="{{selectMode && selectedIds.length}}" class="batch-bar">
+    <text class="batch-count">已选 {{selectedIds.length}} 条</text>
+    <view class="batch-actions">
+      <text class="batch-btn" bindtap="batchMarkProcessed">已处理</text>
+      <text class="batch-btn" bindtap="batchMarkPending">待处理</text>
+      <text class="batch-btn warn" bindtap="batchMarkRejected">拒绝</text>
+      <text class="batch-btn danger" bindtap="batchDelete">删除</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading && list.length === 0}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{list.length === 0}}" class="empty">
+    <view class="empty-text">暂无{{filterLabel}}记录</view>
+  </view>
+
+  <view wx:else class="list">
+    <view
+      class="card {{item.selected ? 'selected' : ''}}"
+      wx:for="{{list}}"
+      wx:key="_id"
+      bindtap="{{selectMode ? 'onToggleSelect' : 'goDetail'}}"
+      data-id="{{item._id}}"
+    >
+      <view wx:if="{{selectMode}}" class="select-box">
+        <view class="checkbox {{item.selected ? 'checked' : ''}}">{{item.selected ? '✓' : ''}}</view>
+      </view>
+      <view class="card-body">
+        <view class="card-top">
+          <view class="card-left">
+            <view class="card-type">{{item.type}}</view>
+            <view class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+          </view>
+          <view class="card-time">{{item.createTimeStr}}</view>
+        </view>
+        <view class="card-name">{{item.name}} · {{item.phone}}</view>
+        <view wx:if="{{item.formNo}}" class="card-form-no">编号：{{item.formNo}}</view>
+        <view class="card-content">{{item.content}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{hasMore && !loading}}" class="load-more" bindtap="loadMore">加载更多</view>
+  <view wx:if="{{loading && list.length > 0}}" class="loading-more">加载中...</view>
+</view>

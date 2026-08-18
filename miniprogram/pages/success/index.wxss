@@ -1,0 +1,150 @@
+page {
+  background: var(--gov-bg);
+  min-height: 100vh;
+}
+
+.page {
+  padding: 32rpx 24rpx 80rpx;
+}
+
+.success-card {
+  background: var(--gov-card);
+  border-radius: var(--gov-radius-lg);
+  padding: 56rpx 40rpx;
+  text-align: center;
+  margin-bottom: 32rpx;
+  border: 1rpx solid var(--gov-border);
+  box-shadow: var(--gov-shadow);
+}
+
+.success-icon {
+  width: 112rpx;
+  height: 112rpx;
+  line-height: 112rpx;
+  margin: 0 auto 28rpx;
+  background: #edf7f0;
+  color: var(--gov-success);
+  font-size: 52rpx;
+  font-weight: 700;
+  border-radius: 50%;
+  border: 3rpx solid #b8e6c8;
+}
+
+.success-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--gov-text);
+  letter-spacing: 4rpx;
+  margin-bottom: 16rpx;
+}
+
+.form-no-card {
+  margin: 28rpx 0 8rpx;
+  padding: 24rpx;
+  background: #f0f6fc;
+  border: 1rpx solid #c5d9ef;
+  border-radius: var(--gov-radius);
+  text-align: center;
+}
+
+.form-no-label {
+  font-size: 24rpx;
+  color: var(--gov-text-secondary);
+  margin-bottom: 8rpx;
+}
+
+.form-no-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--gov-primary);
+  letter-spacing: 2rpx;
+  word-break: break-all;
+}
+
+.form-no-tip {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: var(--gov-text-muted);
+}
+
+.form-no-copy {
+  margin-top: 16rpx;
+  background: #fff !important;
+  color: var(--gov-primary) !important;
+  border: 1rpx solid #c5d9ef !important;
+}
+
+.success-desc {
+  font-size: 28rpx;
+  color: var(--gov-text-secondary);
+  line-height: 1.6;
+}
+
+.pay-amount {
+  margin-top: 24rpx;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--gov-primary);
+}
+
+.voucher-card {
+  margin-top: 32rpx;
+  padding: 24rpx;
+  background: #fafbfc;
+  border-radius: var(--gov-radius);
+  border: 1rpx solid var(--gov-border);
+}
+
+.voucher-label {
+  font-size: 24rpx;
+  color: var(--gov-text-muted);
+  margin-bottom: 8rpx;
+}
+
+.voucher-code {
+  font-size: 52rpx;
+  font-weight: 700;
+  letter-spacing: 8rpx;
+  color: var(--gov-primary);
+  margin-bottom: 8rpx;
+}
+
+.voucher-tip {
+  font-size: 22rpx;
+  color: var(--gov-text-muted);
+  line-height: 1.5;
+}
+
+.voucher-btn {
+  margin-top: 16rpx;
+  background: var(--gov-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--gov-radius);
+}
+
+.primary-btn {
+  background: var(--gov-primary);
+  color: #fff;
+  border-radius: var(--gov-radius);
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: 30rpx;
+  margin-bottom: 20rpx;
+  border: none;
+  letter-spacing: 4rpx;
+}
+
+.secondary-btn {
+  background: var(--gov-card);
+  color: var(--gov-text-secondary);
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: 30rpx;
+}
+
+.pay-btn {
+  background: var(--gov-success);
+}

@@ -1,0 +1,112 @@
+<view class="page">
+  <nav-bar title="数据统计" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:else>
+    <view class="summary-row">
+      <view class="summary-card">
+        <view class="summary-num">{{stats.total}}</view>
+        <view class="summary-label">总提交</view>
+      </view>
+      <view class="summary-card highlight">
+        <view class="summary-num">{{stats.todayCount}}</view>
+        <view class="summary-label">今日</view>
+      </view>
+      <view class="summary-card">
+        <view class="summary-num">{{stats.weekCount}}</view>
+        <view class="summary-label">近7日</view>
+      </view>
+      <view class="summary-card warn">
+        <view class="summary-num">{{stats.pending}}</view>
+        <view class="summary-label">待处理</view>
+      </view>
+    </view>
+
+    <view class="chart-card">
+      <view class="chart-title">近 7 日提交趋势</view>
+      <view class="bar-chart">
+        <view class="bar-item" wx:for="{{dailyTrend}}" wx:key="date">
+          <view class="bar-value">{{item.count}}</view>
+          <view class="bar-track">
+            <view class="bar-fill" style="height: {{item.percent}}%;"></view>
+          </view>
+          <view class="bar-label">{{item.label}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="chart-card">
+      <view class="chart-title">类型占比（饼图）</view>
+      <view wx:if="{{!typeBreakdown.length}}" class="empty">暂无数据</view>
+      <view wx:else class="pie-wrap">
+        <view class="pie-chart" style="background: {{pieStyle}};"></view>
+        <view class="pie-legend">
+          <view class="legend-item" wx:for="{{typeBreakdown}}" wx:key="label">
+            <text class="legend-name">{{item.label}}</text>
+            <text class="legend-count">{{item.count}} ({{item.percent}}%)</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="chart-card" wx:if="{{dailyDigest}}">
+      <view class="chart-title-row">
+        <view class="chart-title">今日运营摘要</view>
+        <view class="digest-actions">
+          <text class="copy-link" bindtap="copyDigest">复制</text>
+          <text class="copy-link push" bindtap="sendDigest">推送</text>
+        </view>
+      </view>
+      <view class="digest-text">{{dailyDigest}}</view>
+      <view wx:if="{{stats.refundPending}}" class="digest-warn">待处理退款 {{stats.refundPending}} 条</view>
+      <view class="digest-tip">定时推送：在表单配置开启「自动推送摘要」并设置推送时间后，每小时检查一次</view>
+    </view>
+
+    <view class="chart-card" wx:if="{{anomalies.length}}">
+      <view class="chart-title">异常告警</view>
+      <view class="anomaly-item" wx:for="{{anomalies}}" wx:key="openid">
+        <text class="anomaly-reason">{{item.reason}}</text>
+        <text class="anomaly-meta">{{item.count}} 次 · {{item.openid}}</text>
+      </view>
+    </view>
+
+    <view class="chart-card" wx:if="{{fieldStats.length}}">
+      <view class="chart-title">字段统计 / 投票</view>
+      <view class="field-stat" wx:for="{{fieldStats}}" wx:key="fieldId">
+        <view class="field-stat-label">{{item.label}}</view>
+        <view wx:if="{{item.votes}}" class="vote-list">
+          <view class="vote-item" wx:for="{{item.votes}}" wx:for-item="vote" wx:key="option">
+            <view class="vote-head">
+              <text class="vote-option">{{vote.option}}</text>
+              <text class="vote-count">{{vote.count}} 票 · {{vote.percent || 0}}%</text>
+            </view>
+            <view class="vote-track">
+              <view class="vote-fill" style="width: {{vote.percent || 0}}%;"></view>
+            </view>
+          </view>
+        </view>
+        <view wx:else class="num-stats">
+          <text>共 {{item.count}} 条</text>
+          <text wx:if="{{item.type === 'rating' || item.type === 'number' || item.type === 'amount'}}"> · 平均 {{item.avg}} · 合计 {{item.sum}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="chart-card">
+      <view class="chart-title">类型分布（Top 8）</view>
+      <view wx:if="{{typeBreakdown.length === 0}}" class="empty">暂无数据</view>
+      <view class="type-list" wx:else>
+        <view class="type-item" wx:for="{{typeBreakdown}}" wx:key="label">
+          <view class="type-head">
+            <text class="type-name">{{item.label}}</text>
+            <text class="type-count">{{item.count}}</text>
+          </view>
+          <view class="type-track">
+            <view class="type-fill" style="width: {{item.percent}}%;"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

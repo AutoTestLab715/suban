@@ -1,0 +1,127 @@
+.page {
+  min-height: 100vh;
+  background: #f0f4f8;
+}
+
+.card {
+  margin: 32rpx;
+  padding: 40rpx 32rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 24rpx rgba(13, 74, 156, 0.08);
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #0d4a9c;
+  margin-bottom: 16rpx;
+}
+
+.desc {
+  font-size: 28rpx;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 24rpx;
+}
+
+.user {
+  font-size: 28rpx;
+  color: #1e293b;
+  margin-bottom: 24rpx;
+}
+
+.status {
+  text-align: center;
+  font-size: 28rpx;
+  color: #64748b;
+  padding: 24rpx 0;
+}
+
+.status.success {
+  color: #059669;
+}
+
+.status.error {
+  color: #dc2626;
+}
+
+.pending-list {
+  margin-top: 8rpx;
+}
+
+.pending-title,
+.manual-title {
+  font-size: 28rpx;
+  color: #64748b;
+  margin-bottom: 20rpx;
+}
+
+.pending-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f1f5f9;
+}
+
+.pending-code {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #0d4a9c;
+}
+
+.pending-time {
+  font-size: 24rpx;
+  color: #94a3b8;
+  margin-top: 6rpx;
+}
+
+.code-display {
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #0d4a9c;
+  margin-bottom: 32rpx;
+  letter-spacing: 8rpx;
+}
+
+.code-input {
+  border: 1rpx solid #e2e8f0;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 36rpx;
+  text-align: center;
+  letter-spacing: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.single-confirm,
+.manual-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.btn {
+  border-radius: 12rpx;
+  font-size: 30rpx;
+}
+
+.btn.confirm {
+  background: #0d4a9c;
+  color: #fff;
+}
+
+.btn.confirm.sm {
+  font-size: 26rpx;
+  padding: 0 28rpx;
+  margin: 0;
+  min-height: 64rpx;
+  line-height: 64rpx;
+}
+
+.btn.cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}

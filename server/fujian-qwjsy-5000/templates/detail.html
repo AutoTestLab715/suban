@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set source_is_gxt = notice.source == 'gxt' or (notice.id|string).startswith('gxt_') %}
+{% set source_is_kjt = notice.source == 'kjt' or (notice.id|string).startswith('kjt_') %}
+{% set source_is_plap = notice.source == 'plap' or (notice.id|string).startswith('plap_') %}
+{% set source_is_railway = notice.source == 'railway' or (notice.id|string).startswith('cr_') %}
+{% block title %}{{ notice.title or '公告详情' }} · 公告抓取{% endblock %}
+{% block content %}
+<section class="card detail-card">
+  <div class="detail-topline"><a class="back-link" href="{{ url_for('index') }}">← 返回结果列表</a><span class="detail-source {{ 'source-railway' if source_is_railway else 'source-plap' if source_is_plap else 'source-gxt' if source_is_gxt else 'source-kjt' if source_is_kjt else 'source-zfcg' }}">{{ '国铁采购网' if source_is_railway else '军队采购网' if source_is_plap else '福建省工业和信息化厅' if source_is_gxt else '省科技厅信息公开' if source_is_kjt else '政府采购网' }}</span></div>
+  <div class="notice-meta"><span class="badge {{ 'badge-railway' if source_is_railway else 'badge-plap' if source_is_plap else 'badge-gxt' if source_is_gxt else 'badge-kjt' if source_is_kjt else 'badge-fujian' }}">{{ '国铁采购' if source_is_railway else '军队采购' if source_is_plap else '工信厅' if source_is_gxt else '科技厅' if source_is_kjt else '采购网' }}</span>{% if notice.notice_name %}<span class="badge badge-light">{{ notice.notice_name }}</span>{% endif %}{% if notice.region %}<span class="badge badge-light">{{ notice.region }}</span>{% endif %}<time>{{ notice.notice_time or notice.publish_time or '未标注日期' }}</time></div>
+  <h1 class="detail-title">{{ notice.title or '(无标题)' }}</h1>
+  <div class="detail-fields">
+    {% if notice.doc_no %}<div><span>文号</span><strong>{{ notice.doc_no }}</strong></div>{% endif %}
+    {% if notice.project_no %}<div><span>项目编号</span><strong>{{ notice.project_no }}</strong></div>{% endif %}
+    {% if notice.project_name %}<div><span>项目名称</span><strong>{{ notice.project_name }}</strong></div>{% endif %}
+    {% if notice.purchaser or notice.publisher %}<div><span>{{ '发布机关' if source_is_gxt else '采购单位' if source_is_plap else '采购人' }}</span><strong>{{ notice.publisher or notice.purchaser }}</strong></div>{% endif %}
+    {% if notice.agency %}<div><span>代理机构</span><strong>{{ notice.agency }}</strong></div>{% endif %}
+    {% if notice.budget %}<div><span>预算</span><strong>{{ notice.budget }}</strong></div>{% endif %}
+    {% if notice.successful_money %}<div><span>成交金额</span><strong>{{ notice.successful_money }}</strong></div>{% endif %}
+    {% if notice.purchase_manner %}<div><span>采购方式</span><strong>{{ notice.purchase_manner }}</strong></div>{% endif %}
+  </div>
+  {% if notice.url %}<p class="detail-original"><a class="btn btn-ghost" href="{{ notice.url }}" target="_blank" rel="noopener">打开官网原文 <span aria-hidden="true">↗</span></a></p>{% endif %}
+  {% if notice.attchs %}
+  <section class="detail-attachments">
+    <h2 class="detail-subtitle">附件下载</h2>
+    <ul class="attachment-list">
+      {% for file in notice.attchs %}
+      <li><a href="{{ file.url or file.file }}" target="_blank" rel="noopener">{{ file.name or file.file }} <span aria-hidden="true">↗</span></a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+  {% if notice.content_html %}<article class="content-html">{{ notice.content_html }}</article>{% elif notice.content_text %}<article class="content-text">{{ notice.content_text }}</article>{% else %}<div class="empty-state"><div class="empty-icon" aria-hidden="true">≡</div><p>暂无正文。</p></div>{% endif %}
+</section>
+{% endblock %}

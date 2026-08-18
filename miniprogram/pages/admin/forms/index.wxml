@@ -1,0 +1,29 @@
+<view class="page">
+  <nav-bar title="表单管理" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view class="header">
+    <view class="header-desc">管理多个表单，设置默认表单后用户直接进入该表单</view>
+    <button class="create-btn" size="mini" bindtap="onCreate" loading="{{creating}}">+ 新建表单</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{!list.length}}" class="empty">暂无表单，点击上方按钮创建</view>
+
+  <view wx:else class="list">
+    <view class="card" wx:for="{{list}}" wx:key="_id">
+      <view class="card-head">
+        <view class="card-title">{{item.title}}</view>
+        <view wx:if="{{item.isDefault}}" class="default-tag">默认</view>
+      </view>
+      <view class="card-meta">提交 {{item.submissionCount}} 条 · 更新于 {{item.updateTimeStr || '—'}}</view>
+      <view class="card-actions">
+        <text class="action primary" bindtap="goEdit" data-id="{{item._id}}">编辑</text>
+        <text class="action" bindtap="goFields" data-id="{{item._id}}">字段</text>
+        <text class="action" bindtap="previewForm" data-id="{{item._id}}">预览</text>
+        <text class="action" bindtap="onCopy" data-id="{{item._id}}" data-title="{{item.title}}">复制</text>
+        <text wx:if="{{!item.isDefault}}" class="action primary" bindtap="onSetDefault" data-id="{{item._id}}">设为默认</text>
+      </view>
+    </view>
+  </view>
+</view>

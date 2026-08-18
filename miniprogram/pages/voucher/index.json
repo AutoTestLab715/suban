@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "电子凭证",
+  "usingComponents": {
+    "nav-bar": "/components/navBar/index"
+  }
+}

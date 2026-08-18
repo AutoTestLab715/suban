@@ -1,0 +1,35 @@
+<view class="page">
+  <nav-bar title="自定义导出" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:else>
+    <view class="section">
+      <view class="section-head">
+        <view class="section-title">选择导出字段</view>
+        <view class="section-actions">
+          <text bindtap="onSelectAll">全选</text>
+          <text bindtap="onClearAll">清空</text>
+        </view>
+      </view>
+      <view class="field-list">
+        <view class="field-item" wx:for="{{fields}}" wx:key="id" bindtap="onToggleField" data-id="{{item.id}}">
+          <checkbox checked="{{selectedMap[item.id]}}" color="#0d4a9c" />
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">导出格式</view>
+      <radio-group class="format-row" bindchange="onFormatChange">
+        <label class="format-item"><radio value="xlsx" checked="{{format === 'xlsx'}}" color="#0d4a9c" /> Excel</label>
+        <label class="format-item"><radio value="csv" checked="{{format === 'csv'}}" color="#0d4a9c" /> CSV</label>
+      </radio-group>
+    </view>
+
+    <button class="export-btn" bindtap="onExport" loading="{{exporting}}" disabled="{{exporting || exportingAttachments}}">开始导出</button>
+    <button class="export-btn secondary" bindtap="onExportAttachments" loading="{{exportingAttachments}}" disabled="{{exporting || exportingAttachments}}">导出附件链接清单</button>
+    <view class="export-tip">附件清单为 JSON 文件，含所有图片/文件/签名的临时下载链接，有效期约 2 小时</view>
+  </block>
+</view>

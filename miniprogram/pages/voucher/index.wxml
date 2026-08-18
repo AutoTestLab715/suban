@@ -1,0 +1,36 @@
+<view class="page">
+  <nav-bar title="电子凭证" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/list/index" />
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:elif="{{voucher}}">
+    <view class="cert-card">
+      <view class="cert-header">
+        <view class="cert-badge">电子凭证</view>
+        <view class="cert-title">{{voucher.title}}</view>
+      </view>
+      <view class="cert-body">
+        <view class="cert-row">
+          <text class="label">提交人</text>
+          <text class="value">{{voucher.submitter || '—'}}</text>
+        </view>
+        <view class="cert-row">
+          <text class="label">提交时间</text>
+          <text class="value">{{voucher.createTimeStr}}</text>
+        </view>
+        <view class="code-block">
+          <view class="code-label">凭证码</view>
+          <view class="code-value">{{voucher.checkCode}}</view>
+        </view>
+        <view class="status-tag {{voucher.checkedIn ? 'done' : 'pending'}}">
+          {{voucher.checkedIn ? '已签到' : '待现场核验'}}
+        </view>
+      </view>
+    </view>
+
+    <button class="primary-btn" bindtap="copyCode">复制凭证码</button>
+    <button class="secondary-btn" bindtap="savePoster" loading="{{saving}}">保存凭证图片</button>
+
+    <canvas canvas-id="voucherCanvas" class="hidden-canvas" style="width: 600px; height: 800px;" />
+  </block>
+</view>

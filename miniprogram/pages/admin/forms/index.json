@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "表单管理",
+  "usingComponents": {
+    "nav-bar": "/components/navBar/index"
+  }
+}

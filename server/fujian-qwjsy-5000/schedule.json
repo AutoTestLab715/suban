@@ -1,0 +1,92 @@
+{
+  "hour": 12,
+  "minute": 30,
+  "times": [
+    {
+      "hour": 12,
+      "minute": 30
+    },
+    {
+      "hour": 18,
+      "minute": 30
+    },
+    {
+      "hour": 12,
+      "minute": 30
+    },
+    {
+      "hour": 18,
+      "minute": 30
+    },
+    {
+      "hour": 12,
+      "minute": 30
+    },
+    {
+      "hour": 18,
+      "minute": 30
+    },
+    {
+      "hour": 12,
+      "minute": 30
+    },
+    {
+      "hour": 18,
+      "minute": 30
+    },
+    {
+      "hour": 8,
+      "minute": 34
+    }
+  ],
+  "source_times": {
+    "zfcg": [
+      {
+        "hour": 12,
+        "minute": 30
+      },
+      {
+        "hour": 18,
+        "minute": 30
+      }
+    ],
+    "kjt": [
+      {
+        "hour": 12,
+        "minute": 30
+      },
+      {
+        "hour": 18,
+        "minute": 30
+      }
+    ],
+    "gxt": [
+      {
+        "hour": 12,
+        "minute": 30
+      },
+      {
+        "hour": 18,
+        "minute": 30
+      }
+    ],
+    "plap": [
+      {
+        "hour": 12,
+        "minute": 30
+      },
+      {
+        "hour": 18,
+        "minute": 30
+      }
+    ],
+    "railway": [
+      {
+        "hour": 8,
+        "minute": 34
+      }
+    ]
+  },
+  "enabled": true,
+  "lookback_days": 3
+}

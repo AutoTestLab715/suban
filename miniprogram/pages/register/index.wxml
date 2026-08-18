@@ -1,0 +1,47 @@
+<view class="page">
+  <view class="gov-header">
+    <view class="gov-title">{{setupMode ? '完善资料' : '账号注册'}}</view>
+    <view class="gov-subtitle">{{setupMode ? '设置头像与昵称，可使用微信昵称' : '完善基本信息，完成平台注册'}}</view>
+    <view class="gov-header-line"></view>
+  </view>
+
+  <view class="content">
+    <view class="register-card">
+      <view class="avatar-section">
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <view class="avatar-ring">
+            <image class="avatar" src="{{avatarUrl || defaultAvatar}}" mode="aspectFill" />
+          </view>
+          <view class="avatar-edit">编辑</view>
+        </button>
+        <view class="avatar-label">点击设置头像</view>
+      </view>
+
+      <view class="field-group">
+        <view class="field-label">昵称</view>
+        <view class="field-input-wrap">
+          <input
+            class="field-input"
+            type="nickname"
+            placeholder="点击填写，可使用微信昵称"
+            placeholder-class="field-placeholder"
+            value="{{nickName}}"
+            bindinput="onNicknameInput"
+            bindblur="onNicknameBlur"
+            maxlength="20"
+          />
+        </view>
+        <view class="field-hint">点击输入框后，可一键选用微信昵称</view>
+      </view>
+
+      <button class="btn-submit" bindtap="onRegister" loading="{{loading}}" disabled="{{loading}}">
+        {{setupMode ? '完成并进入' : '完成注册'}}
+      </button>
+
+      <view wx:if="{{!setupMode}}" class="back-link" bindtap="goLogin">
+        <text>已有账号，</text>
+        <text class="back-link-accent">返回登录</text>
+      </view>
+    </view>
+  </view>
+</view>

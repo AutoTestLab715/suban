@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "修改提交",
+  "usingComponents": {
+    "cloud-tip-modal": "/components/cloudTipModal/index",
+    "nav-bar": "/components/navBar/index",
+    "dynamic-form": "/components/dynamicForm/index"
+  }
+}

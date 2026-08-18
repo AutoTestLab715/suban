@@ -1,0 +1,19 @@
+[Unit]
+Description=Biaoxun local query API
+After=network.target mysql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/biaoxun-query-api
+EnvironmentFile=/opt/fujian-qwjsy/.env
+EnvironmentFile=/etc/biaoxun-query-api.env
+ExecStart=/usr/bin/node /opt/biaoxun-query-api/server.js
+Restart=always
+RestartSec=3
+User=www
+Group=www
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

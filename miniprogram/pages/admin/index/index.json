@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "管理后台",
+  "navigationBarBackgroundColor": "#1e293b",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "nav-bar": "/components/navBar/index"
+  }
+}

@@ -1,0 +1,15 @@
+<view class="page">
+  <nav-bar title="编辑记录" showBack="{{true}}" showAccount="{{false}}" />
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:else>
+    <view class="header-tip">修改后将标记为管理员编辑，字段校验与提交表单一致。</view>
+
+    <view class="form-card">
+      <dynamic-form fields="{{fields}}" values="{{values}}" bind:change="onFieldChange" />
+    </view>
+
+    <button class="save-btn" bindtap="onSave" loading="{{saving}}" disabled="{{saving}}">保存修改</button>
+  </block>
+</view>

@@ -1,0 +1,124 @@
+page {
+  background: #f1f5f9;
+  min-height: 100vh;
+}
+
+.page {
+  padding: 24rpx 24rpx 80rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #94a3b8;
+}
+
+.cert-card {
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(15, 23, 42, 0.08);
+  margin-bottom: 32rpx;
+}
+
+.cert-header {
+  background: linear-gradient(135deg, #0d4a9c 0%, #334155 100%);
+  padding: 40rpx 32rpx;
+  color: #fff;
+}
+
+.cert-badge {
+  font-size: 24rpx;
+  opacity: 0.85;
+  margin-bottom: 8rpx;
+}
+
+.cert-title {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.cert-body {
+  padding: 32rpx;
+}
+
+.cert-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+}
+
+.cert-row .label {
+  color: #94a3b8;
+}
+
+.cert-row .value {
+  color: #334155;
+}
+
+.code-block {
+  margin: 32rpx 0 24rpx;
+  padding: 32rpx;
+  background: #f8fafc;
+  border-radius: 16rpx;
+  text-align: center;
+  border: 2rpx dashed #cbd5e1;
+}
+
+.code-label {
+  font-size: 24rpx;
+  color: #64748b;
+  margin-bottom: 12rpx;
+}
+
+.code-value {
+  font-size: 64rpx;
+  font-weight: 800;
+  letter-spacing: 12rpx;
+  color: #0f172a;
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+}
+
+.status-tag.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-tag.done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.primary-btn,
+.secondary-btn {
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  border: none;
+}
+
+.primary-btn {
+  background: #0d4a9c;
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #fff;
+  color: #0d4a9c;
+  border: 2rpx solid #e2e8f0;
+}
+
+.hidden-canvas {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}

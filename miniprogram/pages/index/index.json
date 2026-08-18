@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "首页",
+  "usingComponents": {
+    "biaoxun-notice-card": "/components/biaoxunNoticeCard/index"
+  }
+}

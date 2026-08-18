@@ -1,0 +1,19 @@
+<view
+  class="nav-bar {{dark ? 'nav-dark' : ''}}"
+  style="padding-top: {{statusBarHeight}}px; background: {{bgColor}};"
+>
+  <view class="nav-inner" style="height: {{contentHeight}}px; padding-right: {{menuRight}}px;">
+    <view class="nav-left">
+      <view wx:if="{{showBackBtn}}" class="back-btn" bindtap="onBack">
+        <view class="back-icon"></view>
+        <text class="back-text">返回</text>
+      </view>
+      <view wx:elif="{{showAccountBtn}}" class="account-btn" bindtap="onAccount">
+        <image class="account-avatar" src="{{avatarUrl || defaultAvatar}}" mode="aspectFill" />
+      </view>
+    </view>
+
+    <view class="nav-title">{{title}}</view>
+  </view>
+</view>
+<view class="nav-placeholder" style="height: {{navBarHeight}}px; background: {{bgColor}};"></view>

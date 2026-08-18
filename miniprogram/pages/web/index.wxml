@@ -1,0 +1,5 @@
+<web-view wx:if="{{url}}" src="{{url}}" binderror="onWebError"></web-view>
+<view wx:else class="web-fallback">
+  <text class="web-fallback-title">无法打开原文</text>
+  <text class="web-fallback-desc">链接无效或当前环境不支持预览</text>
+</view>

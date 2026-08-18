@@ -1,0 +1,239 @@
+<view class="dynamic-form">
+  <block wx:for="{{visibleFields}}" wx:key="id">
+    <!-- 单行文本 -->
+    <view class="form-item" wx:if="{{item.type === 'text' || item.type === 'phone' || item.type === 'email' || item.type === 'number' || item.type === 'idcard'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <input
+        class="form-input"
+        type="{{item.type === 'phone' ? 'number' : item.type === 'number' ? 'digit' : 'text'}}"
+        placeholder="{{item.placeholder || '请输入'}}"
+        value="{{values[item.id]}}"
+        maxlength="{{item.maxLength || (item.type === 'idcard' ? 18 : 140)}}"
+        bindinput="onInput"
+        data-id="{{item.id}}"
+      />
+    </view>
+
+    <!-- 金额 -->
+    <view class="form-item" wx:elif="{{item.type === 'amount'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <view class="amount-row">
+        <text class="amount-prefix">¥</text>
+        <input
+          class="form-input amount-input"
+          type="digit"
+          placeholder="{{item.placeholder || '0.00'}}"
+          value="{{values[item.id]}}"
+          bindinput="onInput"
+          data-id="{{item.id}}"
+        />
+      </view>
+    </view>
+
+    <!-- 多行文本 -->
+    <view class="form-item form-item-textarea" wx:elif="{{item.type === 'textarea'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <textarea
+        class="form-textarea"
+        placeholder="{{item.placeholder || '请输入'}}"
+        value="{{values[item.id]}}"
+        maxlength="{{item.maxLength || 500}}"
+        auto-height
+        bindinput="onInput"
+        data-id="{{item.id}}"
+      />
+      <view wx:if="{{item.maxLength}}" class="char-count">{{item.textLength || 0}}/{{item.maxLength}}</view>
+    </view>
+
+    <!-- 下拉选择 -->
+    <view class="form-item" wx:elif="{{item.type === 'select'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <picker mode="selector" range="{{item.options}}" value="{{pickerIndex[item.id]}}" bindchange="onSelectChange" data-id="{{item.id}}">
+        <view class="form-picker {{values[item.id] ? '' : 'placeholder'}}">
+          {{values[item.id] || item.placeholder || '请选择'}}
+          <image class="picker-arrow" src="/images/arrow.svg" mode="aspectFit" />
+        </view>
+      </picker>
+    </view>
+
+    <!-- 单选 -->
+    <view class="form-item" wx:elif="{{item.type === 'radio'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <radio-group class="radio-group" bindchange="onRadioChange" data-id="{{item.id}}">
+        <label class="radio-item" wx:for="{{item.options}}" wx:for-item="opt" wx:key="*this">
+          <radio value="{{opt}}" checked="{{values[item.id] === opt}}" color="#0d4a9c" />
+          <text>{{opt}}</text>
+        </label>
+      </radio-group>
+    </view>
+
+    <!-- 多选 -->
+    <view class="form-item" wx:elif="{{item.type === 'checkbox'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <checkbox-group class="checkbox-group" bindchange="onCheckboxChange" data-id="{{item.id}}">
+        <label class="checkbox-item" wx:for="{{item.options}}" wx:for-item="opt" wx:key="*this">
+          <checkbox value="{{opt}}" checked="{{checkboxChecked[item.id][opt]}}" color="#0d4a9c" />
+          <text>{{opt}}</text>
+        </label>
+      </checkbox-group>
+    </view>
+
+    <!-- 日期 -->
+    <view class="form-item" wx:elif="{{item.type === 'date'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <picker mode="date" value="{{values[item.id]}}" bindchange="onDateChange" data-id="{{item.id}}">
+        <view class="form-picker {{values[item.id] ? '' : 'placeholder'}}">
+          {{values[item.id] || item.placeholder || '请选择日期'}}
+          <image class="picker-arrow" src="/images/arrow.svg" mode="aspectFit" />
+        </view>
+      </picker>
+    </view>
+
+    <!-- 时间 -->
+    <view class="form-item" wx:elif="{{item.type === 'time'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <picker mode="time" value="{{values[item.id]}}" bindchange="onTimeChange" data-id="{{item.id}}">
+        <view class="form-picker {{values[item.id] ? '' : 'placeholder'}}">
+          {{values[item.id] || item.placeholder || '请选择时间'}}
+          <image class="picker-arrow" src="/images/arrow.svg" mode="aspectFit" />
+        </view>
+      </picker>
+    </view>
+
+    <!-- 地址 -->
+    <view class="form-item" wx:elif="{{item.type === 'address'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <picker mode="region" value="{{values[item.id].region}}" bindchange="onRegionChange" data-id="{{item.id}}">
+        <view class="form-picker {{values[item.id].regionText ? '' : 'placeholder'}}">
+          {{values[item.id].regionText || '请选择省市区'}}
+          <image class="picker-arrow" src="/images/arrow.svg" mode="aspectFit" />
+        </view>
+      </picker>
+      <input
+        class="form-input address-detail"
+        placeholder="{{item.placeholder || '详细地址'}}"
+        value="{{values[item.id].detail}}"
+        bindinput="onAddressDetail"
+        data-id="{{item.id}}"
+      />
+    </view>
+
+    <!-- 图片上传 -->
+    <view class="form-item" wx:elif="{{item.type === 'image'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+        <text class="image-tip">（最多{{item.maxCount || 3}}张）</text>
+      </view>
+      <view class="image-grid">
+        <view class="image-item" wx:for="{{values[item.id]}}" wx:for-item="img" wx:for-index="imgIdx" wx:key="*this">
+          <image class="image-preview" src="{{img}}" mode="aspectFill" />
+          <view class="image-remove" bindtap="onRemoveImage" data-id="{{item.id}}" data-index="{{imgIdx}}">×</view>
+        </view>
+        <view
+          wx:if="{{item.showUploadAdd}}"
+          class="image-add"
+          bindtap="onChooseImage"
+          data-id="{{item.id}}"
+        >
+          <text class="image-add-icon">+</text>
+          <text class="image-add-text">上传</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 文件上传 -->
+    <view class="form-item" wx:elif="{{item.type === 'file'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+        <text class="image-tip">（最多{{item.maxCount || 1}}个）</text>
+      </view>
+      <view class="file-list">
+        <view class="file-item" wx:for="{{values[item.id]}}" wx:for-item="file" wx:for-index="fileIdx" wx:key="fileID">
+          <text class="file-name">{{file.name || '已上传文件'}}</text>
+          <view class="file-remove" bindtap="onRemoveFile" data-id="{{item.id}}" data-index="{{fileIdx}}">×</view>
+        </view>
+        <view
+          wx:if="{{item.showUploadAdd}}"
+          class="file-add"
+          bindtap="onChooseFile"
+          data-id="{{item.id}}"
+        >
+          + 选择文件
+        </view>
+      </view>
+    </view>
+
+    <!-- 星级评分 -->
+    <view class="form-item" wx:elif="{{item.type === 'rating'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <view class="rating-row">
+        <view
+          wx:for="{{[1,2,3,4,5]}}"
+          wx:for-item="star"
+          wx:key="*this"
+          class="star {{values[item.id] >= star ? 'active' : ''}}"
+          bindtap="onRatingTap"
+          data-id="{{item.id}}"
+          data-star="{{star}}"
+        >★</view>
+      </view>
+    </view>
+
+    <!-- 手写签名 -->
+    <view class="form-item" wx:elif="{{item.type === 'signature'}}">
+      <view class="form-label">
+        <text wx:if="{{item.required}}" class="required">*</text>{{item.label}}
+      </view>
+      <view wx:if="{{values[item.id]}}" class="sign-preview-wrap">
+        <image class="sign-preview" src="{{values[item.id]}}" mode="aspectFit" />
+        <view class="sign-btns">
+          <text class="sign-btn" bindtap="openSignPad" data-id="{{item.id}}">重签</text>
+          <text class="sign-btn muted" bindtap="clearSign" data-id="{{item.id}}">清除</text>
+        </view>
+      </view>
+      <view wx:else class="sign-add" bindtap="openSignPad" data-id="{{item.id}}">
+        <text class="sign-add-icon">✍</text>
+        <text>点击手写签名</text>
+      </view>
+    </view>
+  </block>
+
+  <view class="sign-mask" wx:if="{{signFieldId}}" catchtouchmove="true">
+    <view class="sign-dialog">
+      <view class="sign-title">请在下方签名</view>
+      <canvas
+        type="2d"
+        id="signCanvas"
+        class="sign-canvas"
+        disable-scroll="true"
+        bindtouchstart="onSignStart"
+        bindtouchmove="onSignMove"
+      />
+      <view class="sign-dialog-actions">
+        <button class="sign-action" size="mini" bindtap="onSignClear">清除</button>
+        <button class="sign-action" size="mini" bindtap="closeSignPad">取消</button>
+        <button class="sign-action primary" size="mini" bindtap="confirmSign" loading="{{signing}}">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

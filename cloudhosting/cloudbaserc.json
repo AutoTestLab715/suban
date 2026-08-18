@@ -1,0 +1,7 @@
+{
+  "envId": "cloud1-d6gwfgkmmfaec9cd2",
+  "hosting": {
+    "root": "./",
+    "ignore": ["cloudbaserc.json", ".git", ".gitignore"]
+  }
+}

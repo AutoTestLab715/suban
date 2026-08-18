@@ -1,0 +1,133 @@
+<view class="page">
+  <nav-bar title="我的提交" showBack="{{false}}" showAccount="{{true}}" />
+
+  <block wx:if="{{needLogin}}">
+    <view class="guest-panel">
+      <view class="guest-icon"></view>
+      <view class="guest-title">未登录</view>
+      <view class="guest-desc">登录后可查看、修改和管理您的提交记录</view>
+      <button class="guest-login-btn" bindtap="goLoginTap">立即登录</button>
+    </view>
+  </block>
+
+  <block wx:else>
+  <view class="page-intro">
+    <view class="intro-bar"></view>
+    <view class="intro-content">
+      <view class="intro-title">提交记录</view>
+      <view class="intro-desc">共 {{total}} 条记录 · 支持查看、修改与删除</view>
+    </view>
+    <view wx:if="{{list.length}}" class="intro-link {{selectMode ? 'active' : ''}}" bindtap="toggleSelectMode">
+      {{selectMode ? '取消' : '批量删除'}}
+    </view>
+    <view wx:else class="intro-link" bindtap="goFormsGallery">更多表单</view>
+  </view>
+
+  <view wx:if="{{selectMode}}" class="batch-bar">
+    <text class="batch-count">已选 {{selectedIds.length}} 条</text>
+    <view class="batch-actions">
+      <text class="batch-btn" bindtap="toggleSelectAll">{{allSelected ? '取消全选' : '全选'}}</text>
+      <button
+        class="batch-delete-btn"
+        size="mini"
+        bindtap="batchDelete"
+        loading="{{batchDeleting}}"
+        disabled="{{batchDeleting || !selectedIds.length}}"
+      >
+        删除选中
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{list.length === 0}}" class="empty">
+    <view class="empty-icon"></view>
+    <view class="empty-text">暂无提交记录</view>
+    <button class="empty-btn" bindtap="goToForm">前往填写</button>
+  </view>
+
+  <view wx:else class="list">
+    <view
+      class="card {{item.selected ? 'selected' : ''}}"
+      wx:for="{{list}}"
+      wx:key="_id"
+      bindtap="{{selectMode ? 'onToggleSelect' : ''}}"
+      data-id="{{item._id}}"
+    >
+      <view wx:if="{{selectMode}}" class="select-box">
+        <view class="checkbox {{item.selected ? 'checked' : ''}}">{{item.selected ? '✓' : ''}}</view>
+      </view>
+
+      <view class="card-body">
+        <view class="card-header">
+          <view class="card-header-left">
+            <view class="card-type">{{item.type}}</view>
+            <view class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+          </view>
+          <view class="card-time">{{item.createTimeStr}}</view>
+        </view>
+        <view class="card-name">{{item.name}}<text wx:if="{{item.phone}}"> · {{item.phone}}</text></view>
+        <view wx:if="{{item.formNo}}" class="card-form-no">表单编号：{{item.formNo}}</view>
+        <view wx:if="{{item.checkCode}}" class="card-voucher">
+          凭证码：{{item.checkCode}}<text wx:if="{{item.checkedIn}}"> · 已签到</text>
+          <text wx:if="{{!selectMode}}" class="voucher-link" catchtap="goVoucher" data-id="{{item._id}}">查看电子凭证</text>
+        </view>
+        <view class="card-content">{{item.content}}</view>
+        <view class="card-footer">
+          <view class="card-email" wx:if="{{item.email}}">邮箱：{{item.email}}</view>
+          <view wx:if="{{!selectMode}}" class="card-actions">
+            <button
+              wx:if="{{item.canPay}}"
+              class="action-btn primary"
+              size="mini"
+              catchtap="onPay"
+              data-id="{{item._id}}"
+              loading="{{payingId === item._id}}"
+              disabled="{{!!payingId || !!deletingId || !!refundingId}}"
+            >
+              去支付
+            </button>
+            <button
+              wx:if="{{item.canRefund}}"
+              class="action-btn"
+              size="mini"
+              catchtap="onRefund"
+              data-id="{{item._id}}"
+              loading="{{refundingId === item._id}}"
+              disabled="{{!!deletingId || !!payingId || !!refundingId}}"
+            >
+              申请退款
+            </button>
+            <button
+              wx:if="{{item.canEdit}}"
+              class="action-btn primary"
+              size="mini"
+              catchtap="onEdit"
+              data-id="{{item._id}}"
+              disabled="{{!!deletingId || !!payingId || !!refundingId}}"
+            >
+              修改
+            </button>
+            <button
+              class="action-btn danger"
+              size="mini"
+              catchtap="onDelete"
+              data-id="{{item._id}}"
+              loading="{{deletingId === item._id}}"
+              disabled="{{!!deletingId || !!payingId || !!refundingId}}"
+            >
+              删除
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{loadingMore}}" class="load-more">加载更多...</view>
+    <view wx:elif="{{hasMore}}" class="load-more">上拉加载更多</view>
+    <view wx:else class="load-more loaded-all">已加载全部 {{list.length}} 条记录</view>
+  </view>
+
+  <cloud-tip-modal showTipProps="{{showTip}}" title="{{tipTitle}}" content="{{tipContent}}"></cloud-tip-modal>
+  </block>
+</view>

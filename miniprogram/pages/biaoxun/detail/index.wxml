@@ -1,0 +1,176 @@
+<view class="page">
+  <nav-bar
+    title="标讯详情"
+    showBack="{{true}}"
+    showAccount="{{false}}"
+    backUrl="/pages/biaoxun/index?category={{backCategory}}"
+  />
+
+  <view wx:if="{{loading}}" class="state-box">
+    <view class="spinner"></view>
+    <view class="state-title">正在加载详情</view>
+    <view class="state-desc">请稍候</view>
+  </view>
+
+  <view wx:elif="{{errorMessage}}" class="state-box">
+    <view class="state-mark">!</view>
+    <view class="state-title">加载失败</view>
+    <view class="state-desc">{{errorMessage}}</view>
+    <button class="primary-btn" bindtap="loadDetail">重新加载</button>
+  </view>
+
+  <view wx:elif="{{detail}}" class="detail-wrap">
+    <view class="hero">
+      <view class="hero-top">
+        <text class="badge {{detail.sourceCode}}">{{detail.sourceLabel}}</text>
+        <text class="hero-time">{{detail.publishTimeLabel || '时间待公布'}}</text>
+      </view>
+      <text class="hero-title">{{detail.title}}</text>
+      <view class="hero-tags">
+        <text wx:if="{{detail.regionLabel}}" class="hero-chip">{{detail.regionLabel}}</text>
+        <text wx:if="{{detail.categoryLabel}}" class="hero-chip">{{detail.categoryLabel}}</text>
+        <text wx:if="{{detail.projectNoLabel}}" class="hero-chip">{{detail.projectNoLabel}}</text>
+      </view>
+      <view class="hero-source">来源 {{detail.sourceLabel}}</view>
+    </view>
+
+    <view wx:if="{{hallCountdown && hallCountdown.show}}" class="hall-countdown {{hallCountdown.ended ? 'ended' : ''}}">
+      <view class="cd-label">{{hallCountdown.label}}</view>
+      <view class="cd-value">{{hallCountdown.value}}</view>
+      <view wx:if="{{hallCountdown.meta}}" class="cd-meta">{{hallCountdown.meta}}</view>
+    </view>
+
+    <view wx:if="{{detail.sourceCode === 'quanzhou_hall' && (detail.galleryImages.length || detail.galleryLoading || detail.images.length)}}" class="block hall-gallery-block">
+      <view class="block-head">
+        <view class="block-bar"></view>
+        <text class="block-title">标的图片</text>
+      </view>
+      <view wx:if="{{detail.galleryLoading && !detail.galleryImages.length}}" class="hall-gallery-loading">图片加载中…</view>
+      <scroll-view wx:elif="{{detail.galleryImages.length}}" class="hall-gallery" scroll-x="{{true}}" enable-flex="{{true}}">
+        <view
+          wx:for="{{detail.galleryImages}}"
+          wx:key="*this"
+          class="hall-photo"
+          bindtap="previewHallImage"
+          data-src="{{item}}"
+        >
+          <image class="hall-photo-img" src="{{item}}" mode="aspectFill" lazy-load="{{true}}" />
+        </view>
+      </scroll-view>
+      <view wx:else class="hall-gallery-loading">暂无标的图片</view>
+    </view>
+
+    <view wx:if="{{detail.showOverview}}" class="block">
+      <view class="block-head">
+        <view class="block-bar"></view>
+        <text class="block-title">项目概况</text>
+      </view>
+      <view class="grid">
+        <view wx:if="{{detail.showProjectNo}}" class="cell full">
+          <text class="cell-label">项目编号</text>
+          <text class="cell-value">{{detail.projectNoLabel}}</text>
+        </view>
+        <view wx:if="{{detail.showBuyer}}" class="cell full">
+          <text class="cell-label">{{detail.buyerRowLabel}}</text>
+          <text class="cell-value">{{detail.buyerLabel}}</text>
+        </view>
+        <view wx:if="{{detail.showAgency}}" class="cell full">
+          <text class="cell-label">代理机构</text>
+          <text class="cell-value">{{detail.agencyLabel}}</text>
+        </view>
+        <view wx:if="{{detail.showPhone}}" class="cell full phone-cell" bindtap="callPhone" hover-class="phone-cell-hover">
+          <text class="cell-label">联系电话</text>
+          <view class="phone-row">
+            <text class="cell-value phone-link">{{detail.phoneLabel}}</text>
+            <text class="phone-action">拨打</text>
+          </view>
+        </view>
+        <view wx:if="{{detail.showManner}}" class="cell">
+          <text class="cell-label">采购方式</text>
+          <text class="cell-value">{{detail.categoryLabel}}</text>
+        </view>
+        <view wx:if="{{detail.showRegion}}" class="cell {{detail.showBudget || detail.showManner ? '' : 'full'}}">
+          <text class="cell-label">所属地区</text>
+          <text class="cell-value">{{detail.regionLabel}}</text>
+        </view>
+        <view wx:if="{{detail.showBudget}}" class="cell {{detail.showRegion || detail.showManner ? '' : 'full'}}">
+          <text class="cell-label">{{detail.budgetRowLabel}}</text>
+          <text class="cell-value gold">{{detail.budgetLabel}}</text>
+        </view>
+        <view wx:if="{{detail.showOpenTime}}" class="cell full">
+          <text class="cell-label">开拍时间</text>
+          <text class="cell-value">{{detail.openTimeLabel}}</text>
+        </view>
+        <view wx:if="{{detail.deadlineLabel}}" class="cell full alert">
+          <text class="cell-label">{{detail.deadlineRowLabel}}</text>
+          <text class="cell-value danger">{{detail.deadlineLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="block">
+      <view class="block-head">
+        <view class="block-bar"></view>
+        <text class="block-title">公告正文</text>
+      </view>
+      <view class="note">内容来自{{detail.sourceLabel}}，请以官方原文为准</view>
+
+      <block wx:for="{{detail.contentBlocks}}" wx:for-item="block" wx:for-index="bIndex" wx:key="bIndex">
+        <rich-text wx:if="{{block.type === 'html'}}" class="content-rich" nodes="{{block.html}}"></rich-text>
+
+        <view wx:elif="{{block.type === 'text'}}" class="content-text">
+          <view wx:for="{{block.paragraphs}}" wx:key="*this" class="content-para">{{item}}</view>
+        </view>
+
+        <view wx:elif="{{block.type === 'table'}}" class="table-wrap {{block.mode === 'official-kv' ? 'table-wrap-official' : ''}}">
+          <view wx:if="{{block.title}}" class="table-title">{{block.title}}</view>
+          <view
+            wx:for="{{block.cards}}"
+            wx:for-item="card"
+            wx:key="index"
+            class="table-card {{block.mode === 'official-kv' ? 'table-card-official' : ''}}"
+          >
+            <view wx:if="{{block.mode === 'cards'}}" class="table-card-index">第 {{card.index}} 项</view>
+            <view
+              wx:for="{{card.pairs}}"
+              wx:for-item="pair"
+              wx:for-index="pIndex"
+              wx:key="pIndex"
+              class="table-row {{block.mode === 'official-kv' ? 'table-row-official' : ''}}"
+            >
+              <text class="table-label">{{pair.label}}</text>
+              <text class="table-value">{{pair.value}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view wx:if="{{detail.attachments.length}}" class="block">
+      <view class="block-head">
+        <view class="block-bar"></view>
+        <text class="block-title">合同附件</text>
+      </view>
+      <view class="attach-list">
+        <view
+          wx:for="{{detail.attachments}}"
+          wx:key="index"
+          class="attach-item"
+          bindtap="downloadAttachment"
+          data-url="{{item.url}}"
+          data-name="{{item.name}}"
+          data-index="{{index}}"
+        >
+          <view class="attach-icon">{{item.ext || '文件'}}</view>
+          <view class="attach-meta">
+            <text class="attach-name">{{item.name}}</text>
+            <text class="attach-hint">{{downloadingIndex === index ? (item.cached ? (item.isArchive ? '准备转发…' : '正在打开…') : '下载并保存中…') : (item.cached ? (item.isArchive ? '已保存，点击转发给好友' : '已保存到微信，点击打开') : (item.isArchive ? '点击下载，保存后可转发' : '点击下载并保存'))}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <button wx:if="{{detail.url}}" class="link-btn" bindtap="copySourceUrl">复制原文链接</button>
+    <view class="tip">标讯内容来自外部数据库，仅供参考</view>
+  </view>
+</view>

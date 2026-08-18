@@ -1,0 +1,162 @@
+<view class="page">
+  <nav-bar title="咨询填写" showBack="{{false}}" showAccount="{{true}}" />
+
+  <view wx:if="{{needLogin}}" class="login-banner">
+    <text class="login-banner-text">登录后可提交表单并同步草稿</text>
+    <button class="login-banner-btn" bindtap="goLoginTap">去登录</button>
+  </view>
+
+  <view wx:if="{{needChooseForm}}" class="choose-panel">
+    <view class="choose-mark">表单</view>
+    <view class="choose-title">请先选择表单类型</view>
+    <view class="choose-desc">选择要填写的咨询类型后，即可开始填写信息</view>
+    <button class="choose-btn" bindtap="goChooseForm">选择表单</button>
+  </view>
+
+  <block wx:else>
+  <view wx:if="{{coverImage}}" class="cover-wrap">
+    <image class="cover-image" src="{{coverImage}}" mode="aspectFill" />
+    <view class="cover-overlay"></view>
+    <view wx:if="{{logoImage}}" class="logo-wrap">
+      <image class="logo-image" src="{{logoImage}}" mode="aspectFill" />
+    </view>
+  </view>
+
+  <view class="intro-panel {{coverImage ? 'has-cover' : ''}}">
+    <view wx:if="{{logoImage && !coverImage}}" class="logo-inline">
+      <image class="logo-image-sm" src="{{logoImage}}" mode="aspectFill" />
+    </view>
+    <view class="intro-title">{{template.title || '咨询填写'}}</view>
+    <view class="intro-desc">{{template.description || '请如实填写以下信息，带星号为必填项'}}</view>
+    <view wx:if="{{quotaRemaining !== null && quotaRemaining !== undefined}}" class="intro-tag">
+      剩余名额：{{quotaRemaining}}
+    </view>
+    <view wx:if="{{whitelistEnabled}}" class="intro-tag warn">仅限指定手机号填写</view>
+    <view class="change-form" bindtap="goChooseForm">更换表单类型</view>
+  </view>
+
+  <view wx:if="{{offlineMode}}" class="notice-bar warn">离线模式：显示上次缓存的表单，提交将在联网后同步</view>
+  <view wx:if="{{formClosed}}" class="notice-bar warn">{{closedMessage}}</view>
+  <view wx:elif="{{accessBlocked}}" class="notice-bar warn">{{accessBlockedMsg}}</view>
+  <view wx:elif="{{quotaFull}}" class="notice-bar warn">名额已满，感谢关注</view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:elif="{{!formClosed && !quotaFull && !accessBlocked && passwordVerified}}">
+    <view class="section-head">
+      <view class="section-bar"></view>
+      <view class="section-title">{{pagedForm && sections.length ? sections[currentSectionIndex].title : '填写信息'}}</view>
+    </view>
+
+    <view wx:if="{{pagedForm && sections.length}}" class="section-progress">
+      <view class="section-steps">
+        <view
+          wx:for="{{sections}}"
+          wx:key="id"
+          class="section-dot {{currentSectionId === item.id ? 'active' : ''}} {{index < currentSectionIndex ? 'done' : ''}}"
+        ></view>
+      </view>
+      <view class="section-step-text">第 {{currentSectionIndex + 1}} / {{sections.length}} 步</view>
+    </view>
+
+    <view class="form-card">
+      <dynamic-form fields="{{displayFields.length ? displayFields : fields}}" values="{{values}}" uploadSettings="{{uploadSettings}}" bind:change="onFieldChange" />
+    </view>
+
+    <view class="draft-bar">
+      <button class="draft-btn secondary" bindtap="onSaveDraftTap">存草稿</button>
+      <button class="draft-btn outline" bindtap="onOpenDraftBox">
+        草稿箱{{draftCount ? ' · ' + draftCount + '/' + draftLimit : ''}}
+      </button>
+    </view>
+  </block>
+
+  <view wx:if="{{pagedForm && !loading && !formClosed && !quotaFull && !accessBlocked && passwordVerified}}" class="paged-actions">
+    <button wx:if="{{currentSectionIndex > 0}}" class="section-btn secondary" bindtap="onPrevSection">上一步</button>
+    <button class="section-btn primary" style="background: {{themeColor || '#0d4a9c'}}" bindtap="onSubmit">
+      {{isLastSection ? (template.settings.submitButtonText || '提交') : '下一步'}}
+    </button>
+  </view>
+
+  <button
+    wx:if="{{!pagedForm && !loading && !formClosed && !quotaFull && !accessBlocked && passwordVerified}}"
+    class="submit-btn"
+    style="background: {{themeColor || '#0d4a9c'}}"
+    bindtap="onSubmit"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+  >
+    {{template.settings.submitButtonText || '提交'}}
+  </button>
+
+  <view class="footer-links">
+    <view class="footer-link" bindtap="onOpenDraftBox">草稿箱{{draftCount ? '(' + draftCount + '/' + draftLimit + ')' : ''}}</view>
+    <view class="footer-link" bindtap="goToList">我的提交记录</view>
+    <view wx:if="{{oaName && oaArticleUrl}}" class="footer-link" bindtap="openOaArticle">{{oaName}} · 查看详情</view>
+  </view>
+  <view wx:if="{{footerText}}" class="footer-note">{{footerText}}</view>
+
+  <view class="password-mask" wx:if="{{showPassword}}" catchtouchmove="true">
+    <view class="password-dialog">
+      <view class="dialog-head">
+        <view class="dialog-bar"></view>
+        <view class="password-title">访问验证</view>
+      </view>
+      <view class="password-desc">此表单已开启密码保护，请输入访问密码</view>
+      <input class="password-input" password placeholder="请输入访问密码" value="{{passwordInput}}" bindinput="onPasswordInput" />
+      <button class="password-btn" bindtap="onVerifyPassword">确认进入</button>
+    </view>
+  </view>
+
+  <privacy-modal
+    show="{{showPrivacy}}"
+    title="{{template.settings.privacyTitle || '隐私保护提示'}}"
+    content="{{template.settings.privacyText || ''}}"
+    bind:accept="onPrivacyAccept"
+    bind:reject="onPrivacyReject"
+  />
+
+  <view class="password-mask draft-mask" wx:if="{{showDraftBox}}" catchtouchmove="true" bindtap="onCloseDraftBox">
+    <view class="draft-panel" catchtap="">
+      <view class="draft-panel-head">
+        <view class="draft-panel-title">草稿箱（最多{{draftLimit}}份）</view>
+        <text class="draft-panel-close" bindtap="onCloseDraftBox">关闭</text>
+      </view>
+      <view wx:if="{{!draftList.length}}" class="draft-empty">暂无草稿，填写后点击「存草稿」保存，最多 {{draftLimit}} 份</view>
+      <scroll-view wx:else scroll-y class="draft-scroll">
+        <view class="draft-item" wx:for="{{draftList}}" wx:key="draftId">
+          <view class="draft-item-main" bindtap="onApplyDraft" data-draft-id="{{item.draftId}}">
+            <view class="draft-item-title">{{item.draftName || item.templateTitle || '未命名草稿'}}</view>
+            <view class="draft-item-form">表单：{{item.templateTitle || '未命名表单'}}</view>
+            <view class="draft-item-summary">{{item.summary || '暂无填写内容'}}</view>
+            <view class="draft-item-time">保存于 {{item.updatedAtText}}</view>
+          </view>
+          <view class="draft-item-actions">
+            <text class="draft-item-action" catchtap="onRenameDraft" data-draft-id="{{item.draftId}}" data-name="{{item.draftName}}">重命名</text>
+            <text class="draft-item-action danger" catchtap="onDeleteDraft" data-draft-id="{{item.draftId}}" data-title="{{item.draftName}}">删除</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view class="password-mask" wx:if="{{showCaptcha}}" catchtouchmove="true">
+    <view class="password-dialog">
+      <view class="dialog-head">
+        <view class="dialog-bar"></view>
+        <view class="password-title">安全验证</view>
+      </view>
+      <view class="password-desc">请完成计算以继续提交</view>
+      <view class="captcha-question">{{captchaQuestion}}</view>
+      <input class="password-input" type="number" placeholder="请输入答案" value="{{captchaAnswer}}" bindinput="onCaptchaInput" />
+      <view class="captcha-actions">
+        <text class="captcha-refresh" bindtap="onCaptchaRefresh">换一题</text>
+        <text class="captcha-cancel" bindtap="onCaptchaCancel">取消</text>
+      </view>
+      <button class="password-btn" bindtap="onCaptchaConfirm">确认提交</button>
+    </view>
+  </view>
+
+  <cloud-tip-modal showTipProps="{{showTip}}" title="{{tipTitle}}" content="{{tipContent}}"></cloud-tip-modal>
+  </block>
+</view>

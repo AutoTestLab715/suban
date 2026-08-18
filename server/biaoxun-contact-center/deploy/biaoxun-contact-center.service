@@ -1,0 +1,27 @@
+[Unit]
+Description=Biaoxun purchaser contact center
+After=network.target mysql.service mysqld.service
+
+[Service]
+Type=simple
+User=www
+Group=www
+WorkingDirectory=/opt/biaoxun-contact-center
+EnvironmentFile=/opt/fujian-qwjsy/.env
+EnvironmentFile=/opt/biaoxun-contact-center/.env
+ExecStart=/opt/fujian-qwjsy/.venv/bin/python /opt/biaoxun-contact-center/app.py
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

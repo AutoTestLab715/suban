@@ -1,0 +1,52 @@
+<view class="page">
+  <nav-bar title="修改提交" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/list/index" />
+
+  <view class="intro-panel">
+    <view class="intro-title">{{template.title || '修改提交'}}</view>
+    <view class="intro-desc">修改后将更新您的提交内容，请确认信息准确无误</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:elif="{{template}}">
+    <view class="section-head">
+      <view class="section-bar"></view>
+      <view class="section-title">{{pagedForm && sections.length ? sections[currentSectionIndex].title : '填写信息'}}</view>
+    </view>
+
+    <view wx:if="{{pagedForm && sections.length}}" class="section-progress">
+      <view class="section-steps">
+        <view
+          wx:for="{{sections}}"
+          wx:key="id"
+          class="section-dot {{currentSectionId === item.id ? 'active' : ''}} {{index < currentSectionIndex ? 'done' : ''}}"
+        ></view>
+      </view>
+      <view class="section-step-text">第 {{currentSectionIndex + 1}} / {{sections.length}} 步</view>
+    </view>
+
+    <view class="form-card">
+      <dynamic-form fields="{{displayFields.length ? displayFields : fields}}" values="{{values}}" uploadSettings="{{uploadSettings}}" bind:change="onFieldChange" />
+    </view>
+  </block>
+
+  <view wx:if="{{pagedForm && !loading && template}}" class="paged-actions">
+    <button wx:if="{{currentSectionIndex > 0}}" class="section-btn secondary" bindtap="onPrevSection">上一步</button>
+    <button class="section-btn primary" style="background: {{themeColor || '#0c3d7a'}}" bindtap="onSave" loading="{{saving}}" disabled="{{saving}}">
+      {{isLastSection ? '保存修改' : '下一步'}}
+    </button>
+  </view>
+
+  <button
+    wx:if="{{!pagedForm && !loading && template}}"
+    class="submit-btn"
+    style="background: {{themeColor || '#0c3d7a'}}"
+    bindtap="onSave"
+    loading="{{saving}}"
+    disabled="{{saving}}"
+  >
+    保存修改
+  </button>
+
+  <cloud-tip-modal showTipProps="{{showTip}}" title="{{tipTitle}}" content="{{tipContent}}"></cloud-tip-modal>
+</view>

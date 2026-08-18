@@ -1,0 +1,33 @@
+<view class="bx-card" bindtap="onTap" bindtouchstart="onTouchStart" hover-class="bx-card-hover">
+  <view class="bx-head">
+    <text class="bx-badge {{item.sourceCode}}">{{item.sourceLabel}}</text>
+    <text class="bx-time">{{item.publishTimeLabel}}</text>
+  </view>
+
+  <view class="bx-title">{{item.title}}</view>
+
+  <view wx:if="{{showHallCountdown && countdown}}" class="bx-countdown {{countdown.ended ? 'ended' : ''}}">
+    <view class="bx-cd-top">
+      <text class="bx-cd-label">{{countdown.label}}</text>
+      <text wx:if="{{item.showHallPrice}}" class="bx-cd-price">{{item.hallPriceLabel}}</text>
+    </view>
+    <text class="bx-cd-value">{{countdown.value}}</text>
+  </view>
+
+  <view wx:if="{{item.regionLabel || item.categoryLabel || item.hasAttachment}}" class="bx-tags">
+    <text wx:if="{{item.regionLabel}}" class="bx-chip">{{item.regionLabel}}</text>
+    <text wx:if="{{item.categoryLabel}}" class="bx-chip">{{item.categoryLabel}}</text>
+    <text wx:if="{{item.hasAttachment}}" class="bx-chip warn">含附件</text>
+  </view>
+
+  <view wx:if="{{item.showBuyer || item.showBudget}}" class="bx-rows">
+    <view wx:if="{{item.showBuyer}}" class="bx-row">
+      <text class="bx-label">{{item.buyerRowLabel}}</text>
+      <text class="bx-value">{{item.buyerLabel}}</text>
+    </view>
+    <view wx:if="{{item.showBudget}}" class="bx-row">
+      <text class="bx-label">预算</text>
+      <text class="bx-value gold">{{item.budgetLabel}}</text>
+    </view>
+  </view>
+</view>

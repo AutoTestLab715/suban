@@ -1,0 +1,89 @@
+.phone-auth-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+}
+
+.phone-auth-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.phone-auth-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #1c1c1e;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 28rpx;
+}
+
+.sheet-logo {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 8rpx;
+}
+
+.sheet-brand {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sheet-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8rpx;
+}
+
+.sheet-sub {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 28rpx;
+}
+
+.sheet-phone-btn {
+  width: 100%;
+  background: #2c2c2e;
+  border-radius: 16rpx;
+  border: none;
+  padding: 28rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 16rpx;
+}
+
+.sheet-phone-btn::after {
+  border: none;
+}
+
+.sheet-phone-main {
+  font-size: 30rpx;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.sheet-phone-sub {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+}
+
+.sheet-cancel {
+  text-align: center;
+  font-size: 30rpx;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 24rpx 0 8rpx;
+}

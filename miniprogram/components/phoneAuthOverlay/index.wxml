@@ -1,0 +1,22 @@
+<view class="phone-auth-mask" wx:if="{{show}}" catchtouchmove="true">
+  <view class="phone-auth-backdrop" bindtap="onMaskTap"></view>
+  <view class="phone-auth-sheet">
+    <view class="sheet-header">
+      <image class="sheet-logo" src="/images/tab/home-active.png" mode="aspectFit" />
+      <text class="sheet-brand">速办智库</text>
+    </view>
+    <view class="sheet-title">申请获取并验证你的手机号</view>
+    <view class="sheet-sub">身份认证</view>
+    <button
+      class="sheet-phone-btn"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="onGetPhoneNumber"
+      loading="{{loading}}"
+      disabled="{{loading}}"
+    >
+      <text class="sheet-phone-main">微信绑定号码</text>
+      <text class="sheet-phone-sub">验证后可使用完整功能</text>
+    </button>
+    <view class="sheet-cancel" bindtap="onMaskTap">不允许</view>
+  </view>
+</view>

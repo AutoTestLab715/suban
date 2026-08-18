@@ -1,0 +1,155 @@
+.login-page.embedded {
+  min-height: auto;
+  padding: 0 32rpx;
+}
+
+.login-page.embedded .login-panel {
+  box-shadow: none;
+  border: none;
+}
+
+.login-page {
+  min-height: calc(100vh - 200rpx);
+  padding: 48rpx 40rpx 64rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 56rpx;
+}
+
+.brand-logo {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--gov-primary);
+  letter-spacing: 4rpx;
+}
+
+.login-welcome {
+  margin-bottom: 64rpx;
+}
+
+.welcome-title {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: var(--gov-text);
+  margin-bottom: 16rpx;
+}
+
+.welcome-desc {
+  font-size: 28rpx;
+  color: var(--gov-text-secondary);
+  line-height: 1.6;
+}
+
+.login-panel {
+  background: var(--gov-card);
+  border-radius: var(--gov-radius-lg);
+  border: 1rpx solid var(--gov-border);
+  padding: 40rpx 32rpx 36rpx;
+  box-shadow: var(--gov-shadow-md);
+}
+
+.panel-head {
+  margin-bottom: 36rpx;
+}
+
+.panel-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--gov-text);
+  margin-bottom: 10rpx;
+}
+
+.panel-sub {
+  font-size: 24rpx;
+  color: var(--gov-text-muted);
+}
+
+.privacy-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-bottom: 28rpx;
+}
+
+.checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--gov-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkbox.checked {
+  background: var(--gov-primary);
+  border-color: var(--gov-primary);
+}
+
+.check-mark {
+  color: #fff;
+  font-size: 20rpx;
+  line-height: 1;
+}
+
+.privacy-text {
+  font-size: 24rpx;
+  color: var(--gov-text-secondary);
+}
+
+.privacy-link {
+  font-size: 24rpx;
+  color: var(--gov-primary);
+}
+
+.btn-phone {
+  width: 100%;
+  background: #1f1f1f;
+  border-radius: 16rpx;
+  border: none;
+  padding: 28rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 20rpx;
+}
+
+.btn-phone::after {
+  border: none;
+}
+
+.btn-phone[disabled] {
+  opacity: 0.45;
+}
+
+.btn-phone-main {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.btn-phone-sub {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+}
+
+
+.footer-note {
+  text-align: center;
+  margin-top: 28rpx;
+  font-size: 22rpx;
+  color: var(--gov-text-muted);
+  line-height: 1.6;
+}

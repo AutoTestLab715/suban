@@ -1,0 +1,22 @@
+<view class="page">
+  <nav-bar title="操作日志" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view wx:if="{{loading && !list.length}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{!list.length}}" class="empty">暂无操作记录</view>
+
+  <view wx:else class="log-list">
+    <view class="log-item" wx:for="{{list}}" wx:key="_id">
+      <view class="log-head">
+        <view class="log-action">{{item.actionLabel}}</view>
+        <view class="log-time">{{item.timeStr}}</view>
+      </view>
+      <view class="log-meta">{{item.adminName || '管理员'}}</view>
+      <view wx:if="{{item.detailText}}" class="log-detail">{{item.detailText}}</view>
+      <view wx:if="{{item.targetId}}" class="log-id">ID: {{item.targetId}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading && list.length}}" class="loading-more">加载中...</view>
+  <view wx:elif="{{!hasMore && list.length}}" class="loading-more">没有更多了</view>
+</view>

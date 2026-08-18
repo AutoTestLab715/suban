@@ -1,0 +1,33 @@
+<view class="page">
+  <nav-bar title="用户协议与隐私政策" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/index/index" />
+
+  <scroll-view scroll-y class="content" enhanced show-scrollbar="{{false}}">
+    <view class="doc-head">
+      <view class="doc-brand">{{brand}}</view>
+      <view class="doc-title">用户协议与隐私政策</view>
+      <view class="doc-meta">更新日期：{{updatedAt}}</view>
+    </view>
+
+    <view class="section" wx:for="{{sections}}" wx:key="title">
+      <view class="section-title">{{item.title}}</view>
+      <view class="paragraph" wx:for="{{item.paragraphs}}" wx:for-item="para" wx:key="*this">{{para}}</view>
+      <view class="list" wx:if="{{item.list}}">
+        <view class="list-item" wx:for="{{item.list}}" wx:for-item="li" wx:key="*this">
+          <text class="dot">•</text>
+          <text class="li-text">{{li}}</text>
+        </view>
+      </view>
+      <view class="paragraph footer-para" wx:if="{{item.footer}}">{{item.footer}}</view>
+      <view class="list sub-list" wx:if="{{item.subList}}">
+        <view class="list-item" wx:for="{{item.subList}}" wx:for-item="li" wx:key="*this">
+          <text class="dot">•</text>
+          <text class="li-text">{{li}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="doc-actions">
+      <button class="call-btn" bindtap="callService">联系客服</button>
+    </view>
+  </scroll-view>
+</view>

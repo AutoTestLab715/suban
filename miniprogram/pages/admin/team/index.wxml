@@ -1,0 +1,28 @@
+<view class="page">
+  <nav-bar title="团队权限" showBack="{{true}}" showAccount="{{false}}" />
+
+  <view class="tip">在云开发控制台 users 集合将用户 role 设为 admin 即可加入团队。仅超级管理员可修改角色。</view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:else class="list">
+    <view class="member-card" wx:for="{{list}}" wx:key="_id">
+      <image class="avatar" src="{{item.avatarUrl || defaultAvatar}}" mode="aspectFill" />
+      <view class="member-info">
+        <view class="name">{{item.nickName}}</view>
+        <view class="role">{{item.roleLabel}}</view>
+      </view>
+      <picker
+        wx:if="{{myRole === 'owner'}}"
+        mode="selector"
+        range="{{roleOptions}}"
+        range-key="label"
+        value="{{item.roleIndex >= 0 ? item.roleIndex : 0}}"
+        bindchange="onRoleChange"
+        data-id="{{item._id}}"
+      >
+        <view class="role-picker">修改</view>
+      </picker>
+    </view>
+  </view>
+</view>

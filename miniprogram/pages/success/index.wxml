@@ -1,0 +1,31 @@
+<view class="page">
+  <nav-bar title="提交结果" showBack="{{false}}" showAccount="{{true}}" />
+
+  <view class="success-card">
+    <view class="success-icon {{paid ? 'paid' : ''}}">{{paid ? '✓' : needPayment ? '¥' : '✓'}}</view>
+    <view class="success-title">{{title}}</view>
+    <view wx:if="{{desc}}" class="success-desc">{{desc}}</view>
+    <view wx:if="{{formNo}}" class="form-no-card">
+      <view class="form-no-label">表单编号</view>
+      <view class="form-no-value">{{formNo}}</view>
+      <view class="form-no-tip">请保存此编号，便于后续查询与沟通</view>
+      <button class="form-no-copy" size="mini" bindtap="copyFormNo">复制编号</button>
+    </view>
+    <view wx:if="{{needPayment && !paid}}" class="pay-amount">应付 ¥{{paymentAmount}}</view>
+    <view wx:if="{{checkCode}}" class="voucher-card">
+      <view class="voucher-label">签到凭证码</view>
+      <view class="voucher-code">{{checkCode}}</view>
+      <view class="voucher-tip">请保存此码，活动现场出示供工作人员核验</view>
+      <button wx:if="{{submissionId}}" class="voucher-btn" size="mini" bindtap="goVoucher">查看电子凭证</button>
+    </view>
+  </view>
+
+  <button wx:if="{{needPayment && !paid}}" class="primary-btn pay-btn" bindtap="onPay" loading="{{paying}}" disabled="{{paying}}">
+    立即支付 ¥{{paymentAmount}}
+  </button>
+  <button wx:else class="primary-btn" bindtap="goList">查看我的提交</button>
+  <button wx:if="{{redirectType !== 'none' && !needPayment}}" class="secondary-btn" bindtap="onRedirect">
+    {{redirectType === 'miniprogram' ? '前往相关小程序' : '复制相关链接'}}
+  </button>
+  <button class="secondary-btn" bindtap="goForm">{{needPayment && !paid ? '稍后支付' : '继续填写'}}</button>
+</view>

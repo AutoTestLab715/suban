@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="福建省政府采购网与省科技厅信息公开公告检索与抓取平台">
+  <meta name="theme-color" content="#0f766e">
+  <title>{% block title %}福建公告抓取{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="{{ url_for('index') }}" class="brand" aria-label="返回福建公告抓取首页">
+        <span class="brand-icon" aria-hidden="true">闽</span>
+        <span class="brand-copy"><strong>福建公告抓取</strong><small>政府采购网 · 科技厅 · 省工信厅 · 军队采购网</small></span>
+      </a>
+      <nav class="header-nav" aria-label="外部数据源">
+        <a href="{{ page_url }}" target="_blank" rel="noopener">采购网官网<span aria-hidden="true">↗</span></a>
+        <a href="{{ kjt_page_url }}" target="_blank" rel="noopener">科技厅官网<span aria-hidden="true">↗</span></a>
+        <a href="{{ gxt_page_url }}" target="_blank" rel="noopener">工信厅官网<span aria-hidden="true">↗</span></a>
+        <a href="{{ plap_page_url }}" target="_blank" rel="noopener">军队采购网<span aria-hidden="true">↗</span></a>
+        <span class="service-pill"><i class="status-dot" aria-hidden="true"></i><span>服务在线</span></span>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" class="container">{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div><strong>福建公告抓取</strong><p>集中检索公开公告，减少重复查找。</p></div>
+      <p>数据来源：<a href="{{ page_url }}" target="_blank" rel="noopener">福建省政府采购网</a> · <a href="{{ kjt_page_url }}" target="_blank" rel="noopener">省科技厅信息公开</a> · <a href="{{ gxt_page_url }}" target="_blank" rel="noopener">省工信厅政策法规</a> · <a href="{{ plap_page_url }}" target="_blank" rel="noopener">军队采购网</a><br><span>仅供信息查阅，具体内容以原网站公告为准。</span></p>
+    </div>
+  </footer>
+  {% block scripts %}{% endblock %}
+  <script src="{{ url_for('static', filename='cnnc-root.js') }}"></script>
+</body>
+</html>

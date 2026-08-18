@@ -1,0 +1,33 @@
+<view class="page">
+  <nav-bar title="签到核销" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view class="hero">
+    <view class="hero-title">输入 6 位签到码</view>
+    <view class="hero-desc">用户提交成功后获得的凭证码，可用于现场核验</view>
+  </view>
+
+  <view class="input-card">
+    <input
+      class="code-input"
+      value="{{checkCode}}"
+      bindinput="onInput"
+      maxlength="8"
+      placeholder="请输入签到码"
+      confirm-type="done"
+      bindconfirm="onVerify"
+    />
+    <button class="verify-btn" bindtap="onVerify" loading="{{verifying}}" disabled="{{verifying}}">确认签到</button>
+  </view>
+
+  <view wx:if="{{result}}" class="result-card {{result.ok ? 'ok' : 'fail'}}">
+    {{result.msg}}
+  </view>
+
+  <view wx:if="{{lastSubmission}}" class="detail-card">
+    <view class="detail-title">{{lastSubmission.name}} · {{lastSubmission.type}}</view>
+    <view class="detail-row">手机：{{lastSubmission.phone || '—'}}</view>
+    <view class="detail-row">提交时间：{{lastSubmission.createTimeStr}}</view>
+    <view class="detail-row">签到码：{{lastSubmission.checkCode || '—'}}</view>
+    <view class="detail-row">签到状态：{{lastSubmission.checkedIn ? '已签到' : '未签到'}}</view>
+  </view>
+</view>

@@ -1,0 +1,106 @@
+{
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "uglifyFileName": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "enableEngineNative": false,
+    "useIsolateContext": true,
+    "useCompilerModule": true,
+    "userConfirmedUseCompilerModuleSwitch": false,
+    "userConfirmedBundleSwitch": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "compileWorklet": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
+  },
+  "appid": "wx2811e163e3141f87",
+  "projectname": "quickstart-wx-cloud",
+  "libVersion": "3.16.2",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
+  "condition": {
+    "search": {
+      "list": []
+    },
+    "conversation": {
+      "list": []
+    },
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "id": -1,
+          "name": "db guide",
+          "pathName": "pages/databaseGuide/databaseGuide"
+        }
+      ]
+    }
+  },
+  "compileType": "miniprogram",
+  "srcMiniprogramRoot": "miniprogram/",
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "pages/example" },
+      { "type": "suffix", "value": ".bak" },
+      { "type": "file", "value": "images/create_cbr.png" },
+      { "type": "file", "value": "images/create_cbrf.png" },
+      { "type": "file", "value": "images/ai_example1.png" },
+      { "type": "file", "value": "images/ai_example2.png" },
+      { "type": "file", "value": "images/env-select.png" },
+      { "type": "file", "value": "images/default-goods-image.png" },
+      { "type": "file", "value": "images/database.png" },
+      { "type": "file", "value": "images/database_add.png" },
+      { "type": "file", "value": "images/create_env.png" },
+      { "type": "file", "value": "images/function_deploy.png" },
+      { "type": "file", "value": "images/scf-enter.png" },
+      { "type": "file", "value": "images/cloud_dev.png" },
+      { "type": "file", "value": "images/avatar.png" },
+      { "type": "file", "value": "images/icons/avatar.png" },
+      { "type": "file", "value": "images/home/banner-01.png" },
+      { "type": "file", "value": "images/home/banner-02.png" },
+      { "type": "file", "value": "images/home/suban-logo.png" },
+      { "type": "folder", "value": "images/icons" }
+    ],
+    "include": []
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "simulatorPluginLibVersion": {}
+}

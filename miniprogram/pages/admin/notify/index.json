@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "消息通知",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "nav-bar": "/components/navBar/index"
+  }
+}

@@ -1,0 +1,31 @@
+<view class="page">
+  <nav-bar title="分享表单" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:else>
+    <view class="poster-card">
+      <view class="poster-title">{{template.title || '信息提交'}}</view>
+      <view class="poster-desc">{{template.description || '扫码或转发填写表单'}}</view>
+      <view class="qr-wrap">
+        <image wx:if="{{qrUrl}}" class="qr-image" src="{{qrUrl}}" mode="aspectFit" />
+        <view wx:elif="{{generating}}" class="qr-loading">生成中...</view>
+        <view wx:else class="qr-loading" bindtap="generateQr">点击生成二维码</view>
+      </view>
+      <view class="poster-tip">长按图片可识别 · 可保存分享</view>
+    </view>
+
+    <view class="action-row">
+      <button class="action-btn" bindtap="onSaveQr">保存二维码</button>
+      <button class="action-btn" bindtap="onGeneratePoster" loading="{{posterGenerating}}">生成海报</button>
+      <button class="action-btn primary" open-type="share">转发好友</button>
+    </view>
+
+    <view wx:if="{{posterPath}}" class="poster-preview">
+      <image class="poster-image" src="{{posterPath}}" mode="widthFix" />
+      <button class="action-btn primary full" bindtap="onSavePoster">保存海报到相册</button>
+    </view>
+
+    <canvas type="2d" id="posterCanvas" class="poster-canvas" />
+  </block>
+</view>

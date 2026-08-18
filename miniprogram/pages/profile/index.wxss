@@ -1,0 +1,233 @@
+page {
+  background: var(--gov-bg);
+  min-height: 100vh;
+}
+
+.page {
+  padding-bottom: 80rpx;
+}
+
+.profile-guest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 32rpx 24rpx;
+}
+
+.guest-avatar-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  padding: 4rpx;
+  background: linear-gradient(180deg, #0c3d7a, #061e3d);
+  margin-bottom: 20rpx;
+}
+
+.guest-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #f4f6f9;
+}
+
+.guest-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--gov-text);
+  margin-bottom: 8rpx;
+}
+
+.guest-desc {
+  font-size: 24rpx;
+  color: var(--gov-text-muted);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 32rpx;
+}
+
+.guest-login-btn {
+  background: linear-gradient(135deg, #0c3d7a 0%, #082d5c 100%);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 600;
+  height: 80rpx;
+  line-height: 80rpx;
+  padding: 0 64rpx;
+  border-radius: 40rpx;
+  border: none;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 0 36rpx;
+  background: linear-gradient(180deg, #ffffff 0%, var(--gov-bg) 100%);
+  border-bottom: 1rpx solid var(--gov-border-light);
+}
+
+.avatar-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-btn::after {
+  border: none;
+}
+
+.avatar-ring {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  padding: 4rpx;
+  background: linear-gradient(180deg, #0c3d7a, #061e3d);
+  margin-bottom: 12rpx;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #f4f6f9;
+  display: block;
+}
+
+.avatar-tip {
+  font-size: 24rpx;
+  color: var(--gov-text-muted);
+}
+
+.role-badge {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--gov-text-secondary);
+  background: #f4f6f9;
+  padding: 6rpx 24rpx;
+  border-radius: var(--gov-radius);
+  border: 1rpx solid var(--gov-border);
+}
+
+.role-badge.admin {
+  color: var(--gov-primary);
+  background: var(--gov-primary-light);
+  border-color: #b8d4f0;
+  font-weight: 600;
+}
+
+.role-sub {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--gov-text-muted);
+}
+
+.form-card {
+  margin: 24rpx 24rpx 0;
+  background: var(--gov-card);
+  border-radius: var(--gov-radius-lg);
+  border: 1rpx solid var(--gov-border);
+  padding: 8rpx 28rpx;
+  box-shadow: var(--gov-shadow);
+}
+
+.form-item {
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid var(--gov-border-light);
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: var(--gov-text);
+  font-weight: 500;
+  margin-bottom: 14rpx;
+  padding-left: 16rpx;
+  border-left: 4rpx solid var(--gov-primary);
+}
+
+.form-input {
+  font-size: 30rpx;
+  color: var(--gov-text);
+  height: 72rpx;
+  line-height: 72rpx;
+  background: #fafbfc;
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  padding: 0 20rpx;
+}
+
+.save-btn {
+  margin: 32rpx 24rpx 0;
+  background: var(--gov-primary);
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: var(--gov-radius);
+  height: 96rpx;
+  line-height: 96rpx;
+  border: none;
+  letter-spacing: 4rpx;
+}
+
+.save-btn[disabled] {
+  opacity: 0.55;
+}
+
+.admin-actions {
+  margin: 24rpx 24rpx 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.admin-btn {
+  background: var(--gov-primary);
+  color: #fff;
+  font-size: 28rpx;
+  border-radius: var(--gov-radius);
+  height: 88rpx;
+  line-height: 88rpx;
+  border: none;
+  letter-spacing: 2rpx;
+}
+
+.admin-btn.secondary {
+  background: var(--gov-card);
+  color: var(--gov-primary);
+  border: 1rpx solid var(--gov-primary);
+}
+
+.logout-section {
+  margin: 48rpx 24rpx 0;
+  padding-top: 32rpx;
+  border-top: 1rpx solid var(--gov-border);
+}
+
+.logout-btn {
+  background: var(--gov-card);
+  color: var(--gov-red);
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: var(--gov-radius);
+  height: 96rpx;
+  line-height: 96rpx;
+  border: 1rpx solid #f5c6cb;
+}
+
+.logout-btn:active {
+  background: #fef2f2;
+}
+
+.loading {
+  text-align: center;
+  padding: 120rpx 0;
+  color: var(--gov-text-muted);
+  font-size: 28rpx;
+}

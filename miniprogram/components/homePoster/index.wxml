@@ -1,0 +1,110 @@
+<view class="poster">
+  <!-- 主视觉 -->
+  <view class="hero">
+    <view class="hero-bg"></view>
+    <view class="hero-glow"></view>
+    <view class="hero-inner">
+      <view class="hero-brand">{{brand}}</view>
+      <view class="hero-title">{{hero.title}}</view>
+      <view class="hero-divider"></view>
+      <view class="hero-subtitle">{{hero.subtitle}}</view>
+      <view class="hero-lines">
+        <view class="hero-line" wx:for="{{hero.lines}}" wx:key="*this">{{item}}</view>
+      </view>
+      <view class="hero-footer">{{hero.footer}}</view>
+    </view>
+  </view>
+
+  <!-- 核心服务 -->
+  <view class="section">
+    <view class="section-head">
+      <view class="section-head-text">
+        <text class="section-title">核心服务</text>
+        <text class="section-en">CORE SERVICES</text>
+      </view>
+    </view>
+    <view class="service-list">
+      <view class="service-card" wx:for="{{services}}" wx:key="tag">
+        <view class="service-index">0{{index + 1}}</view>
+        <view class="service-body">
+          <view class="service-head">
+            <view class="service-tag">{{item.tag}}</view>
+            <view class="service-name">{{item.name}}</view>
+          </view>
+          <view class="service-desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 融资服务 -->
+  <view class="finance-bar">
+    <view class="finance-head">
+      <text class="finance-title">{{finance.title}}</text>
+      <text class="finance-en">FINANCING</text>
+    </view>
+    <view class="finance-desc">{{finance.desc}}</view>
+    <view class="finance-stats">
+      <view class="finance-stat" wx:for="{{finance.stats}}" wx:key="label">
+        <view class="finance-value">{{item.value}}</view>
+        <view class="finance-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 核心优势 -->
+  <view class="section">
+    <view class="section-head">
+      <view class="section-head-text">
+        <text class="section-title">核心优势</text>
+        <text class="section-en">ADVANTAGES</text>
+      </view>
+    </view>
+    <view class="adv-grid">
+      <view class="adv-item" wx:for="{{advantages}}" wx:key="label">
+        <view class="adv-value">{{item.value}}</view>
+        <view class="adv-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务流程 -->
+  <view class="section">
+    <view class="section-head">
+      <view class="section-head-text">
+        <text class="section-title">服务流程</text>
+        <text class="section-en">PROCESS</text>
+      </view>
+    </view>
+    <view class="process-list">
+      <view class="process-item" wx:for="{{process}}" wx:key="step">
+        <view class="process-track">
+          <view class="process-step">{{item.step}}</view>
+          <view class="process-line" wx:if="{{index < process.length - 1}}"></view>
+        </view>
+        <view class="process-body">
+          <view class="process-title">{{item.title}}</view>
+          <view class="process-desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系我们 -->
+  <view class="contact-card">
+    <view class="contact-head">
+      <text class="contact-slogan">{{contact.slogan}}</text>
+      <text class="contact-en">CONTACT</text>
+    </view>
+    <view class="contact-divider"></view>
+    <view class="contact-row">
+      <text class="contact-label">咨询热线</text>
+      <text class="contact-phone">{{contact.phoneDisplay}}</text>
+    </view>
+    <view class="contact-row">
+      <text class="contact-label">公司地址</text>
+      <text class="contact-address">{{contact.address}}</text>
+    </view>
+    <view class="contact-note">{{contact.note}}</view>
+  </view>
+</view>

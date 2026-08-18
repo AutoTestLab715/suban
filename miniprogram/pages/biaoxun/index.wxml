@@ -1,0 +1,458 @@
+<wxs module="filters">
+var hasKey = function (list, key) {
+  if (!list || !list.length) return false;
+  for (var i = 0; i < list.length; i++) {
+    if (list[i] === key) return true;
+  }
+  return false;
+};
+var businessActive = function (list, key) {
+  if (key === "all") return !list || !list.length;
+  return hasKey(list, key);
+};
+module.exports.hasKey = hasKey;
+module.exports.businessActive = businessActive;
+</wxs>
+
+<page-meta page-style="{{pageScrollLocked ? 'overflow: hidden; height: 100%;' : ''}}" />
+
+<view class="page">
+  <nav-bar
+    title="标讯中心"
+    showBack="{{false}}"
+    showAccount="{{false}}"
+  />
+
+  <view class="toolbar">
+    <view class="search-bar">
+      <view class="search-icon"></view>
+      <input
+        class="search-input"
+        value="{{keyword}}"
+        placeholder="搜索公告标题"
+        placeholder-class="search-placeholder"
+        confirm-type="search"
+        bindinput="onKeywordInput"
+        bindconfirm="onSearch"
+      />
+      <view wx:if="{{keyword}}" class="clear-btn" bindtap="clearSearch">×</view>
+      <view class="search-action" bindtap="onSearch">全库搜索</view>
+    </view>
+
+    <view class="info-source-wrap {{showInfoSourcePanel ? 'open' : ''}}">
+      <view class="info-source-bar">
+        <scroll-view scroll-x class="info-source-scroll" enable-flex="{{true}}">
+          <view class="info-source-row">
+            <view
+              wx:for="{{infoSourceOptions}}"
+              wx:key="key"
+              class="info-source-chip {{filterInfoSource === item.key ? 'active' : ''}}"
+              data-key="{{item.key}}"
+              bindtap="pickInfoSource"
+            >{{item.label}}</view>
+          </view>
+        </scroll-view>
+        <view
+          class="info-source-more {{showInfoSourcePanel ? 'open' : ''}}"
+          bindtap="toggleInfoSourcePanel"
+        >
+          <view class="info-source-more-caret"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="segment">
+      <view
+        wx:for="{{categoryTabs}}"
+        wx:key="key"
+        class="segment-item {{activeCategory === item.key ? 'active' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="switchCategory"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <block wx:if="{{showInfoSourcePanel}}">
+    <view
+      class="info-source-gesture-block"
+      catchtouchmove="true"
+      bindtap="closeInfoSourcePanel"
+    ></view>
+    <view
+      class="info-source-mask"
+      style="top: {{infoSourceMaskTop}}px;"
+      catchtouchmove="true"
+      bindtap="closeInfoSourcePanel"
+    ></view>
+    <view
+      class="info-source-dropdown"
+      style="top: {{infoSourcePanelTop}}px;"
+      catchtouchmove="true"
+      catchtap="noop"
+    >
+      <view class="info-source-dropdown-title">全部信息源</view>
+      <view class="info-source-dropdown-grid">
+        <view
+          wx:for="{{infoSourceOptions}}"
+          wx:key="key"
+          class="info-source-chip {{filterInfoSource === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="pickInfoSource"
+        >{{item.label}}</view>
+      </view>
+    </view>
+  </block>
+
+  <view class="filter-bar">
+    <view
+      class="filter-chip {{filterBusinessTypes.length || filterPartyAType !== 'all' || filterAmountRange !== 'all' || filterExpiryRange !== 'all' || filterPropertyFormat !== 'all' || filterContractPeriod !== 'all' || filterAttachment !== 'all' || filterTurnover !== 'all' ? 'on' : ''}}"
+      data-menu="business"
+      bindtap="openFilterPanel"
+    >
+      <text>{{filterBusinessLabel}}</text>
+      <text class="chip-caret">▾</text>
+    </view>
+    <view
+      class="filter-chip {{filterRegions.length ? 'on' : ''}}"
+      bindtap="openRegionPicker"
+    >
+      <text>{{filterRegions.length ? filterRegionLabel : '地区'}}</text>
+      <text class="chip-caret">▾</text>
+    </view>
+    <picker
+      class="date-picker"
+      mode="date"
+      value="{{filterStartDate || today}}"
+      end="{{filterEndDate || today}}"
+      bindchange="onStartDateChange"
+    >
+      <view class="filter-chip {{filterStartDate ? 'on' : ''}}">
+        <text>{{filterStartDate || '开始日期'}}</text>
+        <text class="chip-caret">▾</text>
+      </view>
+    </picker>
+    <text class="date-range-separator">至</text>
+    <picker
+      class="date-picker"
+      mode="date"
+      value="{{filterEndDate || today}}"
+      start="{{filterStartDate}}"
+      end="{{today}}"
+      bindchange="onEndDateChange"
+    >
+      <view class="filter-chip {{filterEndDate ? 'on' : ''}}">
+        <text>{{filterEndDate || '结束日期'}}</text>
+        <text class="chip-caret">▾</text>
+      </view>
+    </picker>
+    <view
+      wx:if="{{filterRegions.length || filterBusinessTypes.length || filterInfoSource !== 'all' || filterPartyAType !== 'all' || filterAmountRange !== 'all' || filterExpiryRange !== 'all' || filterPropertyFormat !== 'all' || filterContractPeriod !== 'all' || filterAttachment !== 'all' || filterTurnover !== 'all' || filterStartDate || filterEndDate || keyword}}"
+      class="filter-reset"
+      bindtap="clearAllFilters"
+    >清空</view>
+  </view>
+
+  <view
+    wx:if="{{showFilterPanel}}"
+    class="filter-mask"
+    catchtouchmove="noop"
+    bindtap="closeFilterPanel"
+  >
+    <view class="filter-panel" style="margin-bottom: {{tabBarLift}}px;" catchtap="noop">
+      <view class="filter-panel-head">
+        <text class="filter-panel-title">{{isHallCategory ? '项目类型' : '全部筛选'}}</text>
+        <text class="filter-panel-close" bindtap="closeFilterPanel">关闭</text>
+      </view>
+      <view class="filter-panel-body">
+        <scroll-view wx:if="{{!isHallCategory}}" scroll-y class="filter-side">
+          <view
+            wx:for="{{filterMenus}}"
+            wx:key="key"
+            class="filter-side-item {{filterMenu === item.key ? 'active' : ''}}"
+            data-key="{{item.key}}"
+            bindtap="switchFilterMenu"
+          >{{item.label}}</view>
+        </scroll-view>
+
+        <scroll-view
+          scroll-y
+          class="filter-main {{isHallCategory ? 'full' : ''}}"
+          scroll-into-view="{{filterScrollInto}}"
+          scroll-with-animation="{{true}}"
+        >
+          <view id="sec-business" class="filter-section">
+            <view wx:if="{{!isHallCategory}}" class="filter-section-head">
+              <text class="filter-section-title">{{businessSectionTitle}}</text>
+            </view>
+            <view class="tag-grid {{isHallCategory ? 'hall-asset-list' : ''}}">
+              <view
+                wx:for="{{businessTypeOptions}}"
+                wx:key="key"
+                class="tag-item {{isHallCategory ? 'hall-asset-item' : ''}} {{filters.businessActive(draftBusinessTypes, item.key) ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="toggleDraftBusiness"
+              >{{item.label}}</view>
+            </view>
+          </view>
+
+          <block wx:if="{{!isHallCategory}}">
+          <view id="sec-partyA" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">甲方类型</text>
+            </view>
+            <view class="tag-grid">
+              <view
+                wx:for="{{partyAOptions}}"
+                wx:key="key"
+                class="tag-item {{draftPartyAType === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftPartyA"
+              >{{item.label}}</view>
+            </view>
+          </view>
+
+          <view id="sec-amount" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">金额</text>
+            </view>
+            <view class="tag-grid">
+              <view
+                wx:for="{{amountRanges}}"
+                wx:key="key"
+                class="tag-item {{draftAmountRange === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftAmount"
+              >{{item.label}}</view>
+            </view>
+          </view>
+
+          <view id="sec-expiry" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">到期时间</text>
+            </view>
+            <view class="tag-grid tag-grid-2">
+              <view
+                wx:for="{{expiryRanges}}"
+                wx:key="key"
+                class="tag-item {{item.wide ? 'wide' : ''}} {{draftExpiryRange === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftExpiry"
+              >{{item.label}}</view>
+            </view>
+            <view wx:if="{{draftExpiryRange === 'custom'}}" class="expiry-custom">
+              <picker
+                mode="date"
+                value="{{draftExpiryStartDate || today}}"
+                end="{{draftExpiryEndDate || '2099-12-31'}}"
+                bindchange="onDraftExpiryStartChange"
+              >
+                <view class="expiry-date-chip {{draftExpiryStartDate ? 'on' : ''}}">
+                  {{draftExpiryStartDate || '开始日期'}}
+                </view>
+              </picker>
+              <text class="date-range-separator">至</text>
+              <picker
+                mode="date"
+                value="{{draftExpiryEndDate || today}}"
+                start="{{draftExpiryStartDate}}"
+                end="2099-12-31"
+                bindchange="onDraftExpiryEndChange"
+              >
+                <view class="expiry-date-chip {{draftExpiryEndDate ? 'on' : ''}}">
+                  {{draftExpiryEndDate || '结束日期'}}
+                </view>
+              </picker>
+            </view>
+          </view>
+
+          <view id="sec-property" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">物业业态</text>
+            </view>
+            <view class="tag-grid">
+              <view
+                wx:for="{{propertyFormatOptions}}"
+                wx:key="key"
+                class="tag-item {{draftPropertyFormat === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftProperty"
+              >{{item.label}}</view>
+            </view>
+          </view>
+
+          <view id="sec-contract" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">合同周期</text>
+            </view>
+            <view class="tag-grid">
+              <view
+                wx:for="{{contractPeriodOptions}}"
+                wx:key="key"
+                class="tag-item {{draftContractPeriod === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftContract"
+              >{{item.label}}</view>
+            </view>
+          </view>
+
+          <view id="sec-attachment" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">附件</text>
+            </view>
+            <view class="tag-grid tag-grid-2">
+              <view
+                wx:for="{{attachmentOptions}}"
+                wx:key="key"
+                class="tag-item {{draftAttachment === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftAttachment"
+              >{{item.label}}</view>
+            </view>
+          </view>
+
+          <view id="sec-turnover" class="filter-section">
+            <view class="filter-section-head">
+              <text class="filter-section-title">换手率</text>
+            </view>
+            <view class="tag-grid tag-grid-2">
+              <view
+                wx:for="{{turnoverOptions}}"
+                wx:key="key"
+                class="tag-item {{draftTurnover === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="pickDraftTurnover"
+              >{{item.label}}</view>
+            </view>
+          </view>
+          </block>
+
+          <view class="filter-main-spacer"></view>
+        </scroll-view>
+      </view>
+      <view class="filter-panel-foot">
+        <button class="filter-reset-btn" bindtap="resetFilterDraft">重置</button>
+        <button class="filter-confirm-btn" bindtap="confirmFilterPanel">确认</button>
+      </view>
+    </view>
+  </view>
+
+  <view
+    wx:if="{{showRegionPicker}}"
+    class="picker-mask"
+    catchtouchmove="noop"
+    bindtap="closePickers"
+  >
+    <view class="picker-sheet" style="margin-bottom: {{tabBarLift}}px;" catchtap="noop">
+      <view class="picker-title">
+        <view class="picker-title-left">
+          <text
+            wx:if="{{regionPanel === 'city'}}"
+            class="picker-back"
+            bindtap="backRegionPanel"
+          >‹ 返回</text>
+          <text>{{regionPanel === 'city' ? regionCity : '选择地区'}}</text>
+        </view>
+        <text class="picker-close" bindtap="closePickers">关闭</text>
+      </view>
+      <scroll-view scroll-y class="picker-scroll">
+        <view
+          wx:for="{{regionList}}"
+          wx:key="name"
+          class="picker-option {{item.checked ? 'active' : ''}}"
+        >
+          <view
+            class="picker-option-main"
+            data-name="{{item.name}}"
+            data-select="{{item.selectName}}"
+            data-children="{{item.hasChildren ? 1 : 0}}"
+            bindtap="pickRegion"
+          >
+            <text class="picker-option-name">{{item.name}}</text>
+            <text wx:if="{{item.hasChildren}}" class="picker-arrow">›</text>
+          </view>
+          <view
+            class="picker-check"
+            data-name="{{item.name}}"
+            data-select="{{item.selectName}}"
+            catchtap="toggleRegionCheck"
+          >
+            <view class="picker-checkbox {{item.checked ? 'on' : ''}}">
+              <text wx:if="{{item.checked}}" class="picker-check-mark">✓</text>
+            </view>
+          </view>
+        </view>
+        <view class="picker-scroll-spacer"></view>
+      </scroll-view>
+      <view class="filter-panel-foot">
+        <button class="filter-reset-btn" bindtap="resetRegionDraft">重置</button>
+        <button class="filter-confirm-btn" bindtap="confirmRegionPicker">确认</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="body">
+    <view wx:if="{{refreshing}}" class="list-refreshing">
+      <view class="spinner mini"></view>
+      <text>正在刷新最新公告…</text>
+    </view>
+
+    <view wx:if="{{showSearchProgress}}" class="state-box search-progress-box">
+      <view class="state-title">全库搜索中</view>
+      <view class="state-desc">正在检索标题「{{searchedKeyword}}」</view>
+      <view class="search-progress">
+        <view class="search-progress-track">
+          <view class="search-progress-bar" style="width: {{searchProgress}}%;"></view>
+        </view>
+        <view class="search-progress-text">{{searchProgress}}%</view>
+      </view>
+    </view>
+
+    <view wx:elif="{{loading && !list.length}}" class="state-box">
+      <view class="spinner"></view>
+      <view class="state-title">正在加载{{sourceName}}</view>
+      <view class="state-desc">请稍候</view>
+    </view>
+
+    <view wx:elif="{{errorMessage && !list.length}}" class="state-box">
+      <view class="state-mark error">!</view>
+      <view class="state-title">加载失败</view>
+      <view class="state-desc">{{errorMessage}}</view>
+      <button class="primary-btn" bindtap="retryLoad">重新加载</button>
+    </view>
+
+    <view wx:elif="{{!list.length}}" class="state-box">
+      <view class="state-mark empty">⌕</view>
+      <view class="state-title">{{'暂无' + sourceName + '标讯'}}</view>
+      <view class="state-desc">{{searchHint || '换个关键词或调整筛选条件试试'}}</view>
+      <button
+        wx:if="{{searchedKeyword || filterRegions.length || filterBusinessTypes.length || filterInfoSource !== 'all' || filterPartyAType !== 'all' || filterAmountRange !== 'all' || filterExpiryRange !== 'all' || filterPropertyFormat !== 'all' || filterContractPeriod !== 'all' || filterAttachment !== 'all' || filterTurnover !== 'all' || filterStartDate || filterEndDate}}"
+        class="ghost-btn"
+        bindtap="clearAllFilters"
+      >清空筛选</button>
+    </view>
+
+    <view wx:else class="list">
+      <view class="list-meta">
+        <text class="meta-left">{{sourceName}} · 最新公告</text>
+        <text wx:if="{{searchedKeyword && searchTotalKnown}}" class="meta-right">已显示全部 {{searchTotal}} 条</text>
+        <text wx:elif="{{searchedKeyword && searchHint}}" class="meta-right">{{searchHint}}</text>
+      </view>
+
+      <biaoxun-notice-card
+        wx:for="{{list}}"
+        wx:key="id"
+        item="{{item}}"
+        bind:open="onNoticeCardOpen"
+      />
+
+      <view class="list-foot">
+        <view wx:if="{{loadingMore}}" class="foot-loading">
+          <view class="spinner mini"></view>
+          <text>加载更多</text>
+        </view>
+        <text wx:elif="{{hasMore}}">上拉加载更多</text>
+        <text wx:else>— 已显示全部 —</text>
+      </view>
+    </view>
+  </view>
+</view>

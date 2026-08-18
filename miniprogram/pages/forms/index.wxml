@@ -1,0 +1,40 @@
+<view class="page">
+  <nav-bar title="表单中心" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/fill/index" alwaysUseBackUrl="{{true}}" />
+
+  <view class="guide-card {{showGuide ? 'highlight' : ''}}">
+    <view class="guide-step">1</view>
+    <view class="guide-body">
+      <view class="guide-title">请先选择表单类型</view>
+      <view class="guide-desc">点击下方卡片后，进入对应表单填写信息</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{!list.length}}" class="empty">暂无可填写的表单</view>
+
+  <view wx:else class="list">
+    <view class="list-tip">可选表单</view>
+    <view
+      class="card"
+      wx:for="{{list}}"
+      wx:key="_id"
+      bindtap="goForm"
+      data-id="{{item._id}}"
+      style="border-left-color: {{item.themeColor || '#0c3d7a'}};"
+    >
+      <image wx:if="{{item.coverImage}}" class="cover" src="{{item.coverImage}}" mode="aspectFill" />
+      <view class="card-body">
+        <view class="card-title">
+          {{item.title}}
+          <text wx:if="{{item.isDefault}}" class="tag">默认</text>
+        </view>
+        <view wx:if="{{item.description}}" class="card-desc">{{item.description}}</view>
+        <view class="card-action">
+          <text>开始填写</text>
+          <text class="card-arrow">→</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,136 @@
+page {
+  background: var(--gov-bg);
+  min-height: 100vh;
+}
+
+.page {
+  padding: 0 24rpx 80rpx;
+}
+
+.guide-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  margin-top: 20rpx;
+  padding: 24rpx;
+  background: var(--gov-card);
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius-lg);
+  box-shadow: var(--gov-shadow);
+}
+
+.guide-card.highlight {
+  border-color: #c5d9ef;
+  background: linear-gradient(135deg, #f0f6fc 0%, #fff 70%);
+}
+
+.guide-step {
+  width: 44rpx;
+  height: 44rpx;
+  line-height: 44rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--gov-primary);
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+.guide-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--gov-text);
+  margin-bottom: 6rpx;
+}
+
+.guide-desc {
+  font-size: 24rpx;
+  color: var(--gov-text-secondary);
+  line-height: 1.55;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: var(--gov-text-muted);
+  font-size: 28rpx;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.list-tip {
+  font-size: 24rpx;
+  color: var(--gov-text-muted);
+  padding-left: 4rpx;
+}
+
+.card {
+  background: var(--gov-card);
+  border-radius: var(--gov-radius-lg);
+  overflow: hidden;
+  border: 1rpx solid var(--gov-border);
+  box-shadow: var(--gov-shadow);
+}
+
+.card:active {
+  opacity: 0.92;
+}
+
+.cover {
+  width: 100%;
+  height: 180rpx;
+}
+
+.card-body {
+  padding: 28rpx;
+  border-left: 6rpx solid var(--gov-primary);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--gov-text);
+  letter-spacing: 1rpx;
+  margin-bottom: 10rpx;
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 12rpx;
+  font-size: 22rpx;
+  color: var(--gov-primary);
+  background: var(--gov-primary-light);
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #c5d9ef;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.card-desc {
+  font-size: 26rpx;
+  color: var(--gov-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16rpx;
+}
+
+.card-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 26rpx;
+  color: var(--gov-primary);
+  font-weight: 600;
+}
+
+.card-arrow {
+  font-size: 28rpx;
+}

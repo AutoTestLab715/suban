@@ -1,0 +1,40 @@
+<view class="login-page {{embedded ? 'embedded' : ''}}">
+  <view class="login-brand" wx:if="{{!embedded}}">
+    <view class="brand-logo">{{brandName}}</view>
+  </view>
+
+  <view class="login-welcome" wx:if="{{!embedded}}">
+    <view class="welcome-title">你好</view>
+    <view class="welcome-desc">欢迎来到{{brandName}}智慧数字服务平台</view>
+  </view>
+
+  <view class="login-panel">
+    <view class="panel-head">
+      <view class="panel-title">申请获取并验证你的手机号</view>
+      <view class="panel-sub">身份认证 · 登录后可使用完整功能</view>
+    </view>
+
+    <view class="privacy-row" bindtap="toggleAgree">
+      <view class="checkbox {{agreedPrivacy ? 'checked' : ''}}">
+        <text wx:if="{{agreedPrivacy}}" class="check-mark">✓</text>
+      </view>
+      <text class="privacy-text">我已阅读并同意</text>
+      <text class="privacy-link" catchtap="openPrivacy">《{{privacyContractName}}》</text>
+    </view>
+
+    <button
+      class="btn-phone"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="onGetPhoneNumber"
+      loading="{{loginLoading}}"
+      disabled="{{loginLoading || !agreedPrivacy}}"
+    >
+      <text class="btn-phone-main">手机号快捷登录</text>
+      <text class="btn-phone-sub">验证微信绑定号码</text>
+    </button>
+
+    <view class="footer-note">
+      <text>本平台采用微信官方身份核验，数据加密存储，请放心使用</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,16 @@
+{
+  "name": "form-admin",
+  "version": "1.0.0",
+  "description": "表单提交小程序管理后台",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@cloudbase/node-sdk": "^2.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  }
+}

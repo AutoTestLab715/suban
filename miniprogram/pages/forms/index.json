@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "表单中心",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "nav-bar": "/components/navBar/index"
+  }
+}

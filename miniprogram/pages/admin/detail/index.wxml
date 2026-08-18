@@ -1,0 +1,143 @@
+<view class="page" wx:if="{{detail}}">
+  <nav-bar title="记录详情" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view class="status-bar">
+    <view class="status-tag {{detail.statusClass}}">{{detail.statusLabel}}</view>
+    <view class="status-time">
+      提交于 {{detail.createTimeStr}}
+      <text wx:if="{{detail.editedByAdmin}}" class="edited-tag">已编辑</text>
+    </view>
+  </view>
+
+  <view wx:if="{{detail.formNo}}" class="form-no-card">
+    <view class="form-no-label">表单编号</view>
+    <view class="form-no-code">{{detail.formNo}}</view>
+  </view>
+
+  <view wx:if="{{detail.checkCode}}" class="checkin-card">
+    <view class="checkin-label">签到凭证</view>
+    <view class="checkin-code">{{detail.checkCode}}</view>
+    <view class="checkin-status">{{detail.checkedIn ? '已签到' : '未签到'}}</view>
+  </view>
+
+  <view wx:if="{{detail.refundStatus === 'pending'}}" class="refund-card">
+    <view class="refund-label">退款申请</view>
+    <view class="refund-reason">{{detail.refundReason || '用户未填写原因'}}</view>
+    <view class="action-row">
+      <button class="action-btn primary" bindtap="approveRefund" loading="{{processingRefund}}">批准退款</button>
+      <button class="action-btn reject" bindtap="rejectRefund" loading="{{processingRefund}}">拒绝</button>
+    </view>
+  </view>
+
+  <view wx:elif="{{detail.refundStatus === 'approved' || detail.refundStatus === 'rejected'}}" class="refund-card muted">
+    <view class="refund-label">退款状态：{{detail.refundStatus === 'approved' ? '已退款' : '已拒绝'}}</view>
+    <view wx:if="{{detail.refundAdminNote}}" class="refund-reason">备注：{{detail.refundAdminNote}}</view>
+  </view>
+
+  <view class="info-card">
+    <view class="info-row" wx:for="{{answerRows}}" wx:key="fieldId">
+      <view class="info-label">{{item.label}}</view>
+      <view wx:if="{{item.fieldType === 'image' && item.rawValue.length}}" class="image-list">
+        <image
+          wx:for="{{item.rawValue}}"
+          wx:for-item="img"
+          wx:for-index="imgIdx"
+          wx:key="*this"
+          class="detail-image"
+          src="{{img}}"
+          mode="aspectFill"
+          bindtap="previewImage"
+          data-field-id="{{item.fieldId}}"
+          data-index="{{imgIdx}}"
+        />
+      </view>
+      <view wx:elif="{{item.fieldType === 'file' && item.rawValue.length}}" class="file-list">
+        <view
+          class="file-link"
+          wx:for="{{item.rawValue}}"
+          wx:for-item="file"
+          wx:key="fileID"
+          bindtap="openFile"
+          data-file-id="{{file.fileID}}"
+        >
+          📎 {{file.name || '附件'}}
+        </view>
+      </view>
+      <view wx:elif="{{item.fieldType === 'signature' && item.rawValue}}" class="signature-block">
+        <image class="detail-signature" src="{{item.rawValue}}" mode="aspectFit" bindtap="previewSignature" data-src="{{item.rawValue}}" />
+      </view>
+      <view
+        wx:else
+        class="info-value {{item.fieldId === 'phone' ? 'phone' : ''}}"
+        bindtap="{{item.fieldId === 'phone' ? 'callPhone' : ''}}"
+      >
+        {{item.value}}
+      </view>
+    </view>
+  </view>
+
+  <view class="remark-card">
+    <view class="remark-label">管理员标注（星级）</view>
+    <view class="grade-row">
+      <view
+        wx:for="{{[1,2,3,4,5]}}"
+        wx:for-item="star"
+        wx:key="*this"
+        class="grade-star {{adminGrade >= star ? 'active' : ''}}"
+        bindtap="onGradeTap"
+        data-grade="{{star}}"
+      >★</view>
+    </view>
+    <view class="remark-label">管理员备注</view>
+    <textarea
+      class="remark-input"
+      placeholder="添加内部备注..."
+      value="{{remark}}"
+      bindinput="onRemarkInput"
+      maxlength="200"
+    />
+    <button class="remark-save" size="mini" bindtap="saveRemark" loading="{{savingRemark}}">保存备注</button>
+  </view>
+
+  <view class="action-row">
+    <button class="action-btn edit" bindtap="goEdit">编辑内容</button>
+  </view>
+
+  <view class="action-row">
+    <button class="action-btn call" bindtap="callPhone">拨打电话</button>
+    <button class="action-btn copy" bindtap="copyPhone">复制手机号</button>
+  </view>
+
+  <view class="action-row">
+    <button
+      wx:if="{{detail.status === 'pending'}}"
+      class="action-btn primary"
+      bindtap="markProcessed"
+      loading="{{updating}}"
+    >
+      标记已处理
+    </button>
+    <button
+      wx:if="{{detail.status === 'pending'}}"
+      class="action-btn reject"
+      bindtap="markRejected"
+      loading="{{updating}}"
+    >
+      标记拒绝
+    </button>
+    <button
+      wx:if="{{detail.status !== 'pending'}}"
+      class="action-btn secondary"
+      bindtap="markPending"
+      loading="{{updating}}"
+    >
+      标记待处理
+    </button>
+    <button class="action-btn danger" bindtap="onDelete">删除记录</button>
+  </view>
+</view>
+
+<view wx:else class="loading-page-wrap">
+  <nav-bar title="记录详情" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+  <view class="loading-page">加载中...</view>
+</view>

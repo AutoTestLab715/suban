@@ -1,0 +1,146 @@
+<view class="page">
+  <nav-bar title="字段管理" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/forms/index" />
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:else>
+    <view class="toolbar">
+      <view class="tip">长按字段卡片可拖拽调整顺序</view>
+    </view>
+
+    <view class="field-list {{isDragging ? 'dragging-active' : ''}}">
+      <view
+        class="field-card {{isDragging && dragIndex === index ? 'dragging' : ''}} {{isDragging && dragIndex !== index ? 'shifted' : ''}} {{isDragging && hoverIndex === index && dragIndex !== index ? 'drop-target' : ''}}"
+        wx:for="{{renderFields}}"
+        wx:key="id"
+        bindlongpress="onDragStart"
+        catchtouchmove="onDragMove"
+        bindtouchend="onDragEnd"
+        bindtouchcancel="onDragEnd"
+        data-index="{{index}}"
+        style="transform: translate3d(0, {{item.shiftY}}px, 0) scale({{isDragging && dragIndex === index ? 1.04 : (isDragging && dragIndex !== index ? 0.97 : 1)}}); z-index: {{item.zIndex}};"
+      >
+        <view class="drag-handle">≡</view>
+        <view class="field-main">
+          <view class="field-label">{{item.label}}</view>
+          <view class="field-meta">
+            <text class="tag">{{typeLabels[item.type] || item.type}}</text>
+            <text wx:if="{{item.required}}" class="tag required">必填</text>
+            <text wx:if="{{item.showIf}}" class="tag logic">条件显示</text>
+          </view>
+          <view wx:if="{{item.showIf}}" class="field-logic">
+            当 {{item.showIf.fieldId}} {{item.showIf.operator === 'neq' ? '≠' : item.showIf.operator === 'contains' ? '包含' : item.showIf.operator === 'notContains' ? '不包含' : item.showIf.operator === 'empty' ? '为空' : item.showIf.operator === 'notEmpty' ? '不为空' : '='}} {{item.showIf.value}} 时显示
+          </view>
+        </view>
+        <view class="field-actions">
+          <view class="action edit" catchtap="onEditField" data-index="{{index}}">编辑</view>
+          <view class="action del" catchtap="onDeleteField" data-index="{{index}}">删</view>
+        </view>
+      </view>
+    </view>
+
+    <button class="add-btn" bindtap="onAddField">+ 添加字段</button>
+    <button class="save-btn" bindtap="onSaveAll" loading="{{saving}}" disabled="{{saving || isDragging}}">保存全部字段</button>
+  </block>
+
+  <view class="editor-mask" wx:if="{{showEditor}}" catchtouchmove="true">
+    <view class="editor-panel">
+      <view class="editor-title">{{editingIndex >= 0 ? '编辑字段' : '添加字段'}}</view>
+
+      <scroll-view scroll-y class="editor-body">
+        <view class="editor-item">
+          <view class="editor-label">字段名称</view>
+          <input class="editor-input" value="{{editingField.label}}" bindinput="onEditorInput" data-field="label" />
+        </view>
+        <view class="editor-item">
+          <view class="editor-label">字段 ID（英文）</view>
+          <input class="editor-input" value="{{editingField.id}}" bindinput="onEditorInput" data-field="id" />
+        </view>
+        <view class="editor-item">
+          <view class="editor-label">字段类型</view>
+          <picker mode="selector" range="{{typeOptions}}" range-key="label" value="{{typeIndex}}" bindchange="onTypeChange">
+            <view class="editor-picker">{{typeOptions[typeIndex].label}}</view>
+          </picker>
+        </view>
+        <view class="editor-item row">
+          <view class="editor-label">必填</view>
+          <switch checked="{{editingField.required}}" bindchange="onEditorSwitch" data-field="required" color="#0d4a9c" />
+        </view>
+        <view class="editor-item">
+          <view class="editor-label">占位提示</view>
+          <input class="editor-input" value="{{editingField.placeholder}}" bindinput="onEditorInput" data-field="placeholder" />
+        </view>
+        <view class="editor-item" wx:if="{{editingField.type === 'textarea' || editingField.type === 'text'}}">
+          <view class="editor-label">最大长度</view>
+          <input class="editor-input" type="number" value="{{editingField.maxLength}}" bindinput="onEditorInput" data-field="maxLength" />
+        </view>
+        <view class="editor-item" wx:if="{{editingField.type === 'select' || editingField.type === 'radio' || editingField.type === 'checkbox'}}">
+          <view class="editor-label">选项（每行一个）</view>
+          <textarea class="editor-textarea" value="{{optionsText}}" bindinput="onOptionsInput" auto-height />
+        </view>
+        <view class="editor-item" wx:if="{{editingField.type === 'image' || editingField.type === 'file'}}">
+          <view class="editor-label">最大数量</view>
+          <input class="editor-input" type="number" value="{{editingField.maxCount}}" bindinput="onEditorInput" data-field="maxCount" />
+        </view>
+
+        <view class="editor-item" wx:if="{{editingField.type === 'number' || editingField.type === 'amount'}}">
+          <view class="editor-label">最小值</view>
+          <input class="editor-input" type="digit" value="{{editingField.min}}" bindinput="onEditorInput" data-field="min" />
+        </view>
+        <view class="editor-item" wx:if="{{editingField.type === 'number' || editingField.type === 'amount'}}">
+          <view class="editor-label">最大值</view>
+          <input class="editor-input" type="digit" value="{{editingField.max}}" bindinput="onEditorInput" data-field="max" />
+        </view>
+        <view class="editor-item" wx:if="{{editingField.type === 'text' || editingField.type === 'textarea' || editingField.type === 'phone'}}">
+          <view class="editor-label">正则表达式</view>
+          <input class="editor-input" value="{{editingField.pattern}}" bindinput="onEditorInput" data-field="pattern" placeholder="如 ^[A-Z]+$" />
+        </view>
+        <view class="editor-item" wx:if="{{editingField.pattern}}">
+          <view class="editor-label">正则错误提示</view>
+          <input class="editor-input" value="{{editingField.patternMsg}}" bindinput="onEditorInput" data-field="patternMsg" />
+        </view>
+
+        <view class="editor-section">条件显示（逻辑联动）</view>
+        <view class="editor-item row">
+          <view class="editor-label">启用条件显示</view>
+          <switch checked="{{showIfEnabled}}" bindchange="onShowIfSwitch" color="#0d4a9c" />
+        </view>
+        <block wx:if="{{showIfEnabled && fields.length}}">
+          <view class="editor-item">
+            <view class="editor-label">当字段</view>
+            <picker mode="selector" range="{{fields}}" range-key="label" value="{{showIfFieldIndex}}" bindchange="onShowIfFieldChange">
+              <view class="editor-picker">{{fields[showIfFieldIndex].label}}</view>
+            </picker>
+          </view>
+          <view class="editor-item">
+            <view class="editor-label">条件</view>
+            <picker mode="selector" range="{{showIfOperators}}" range-key="label" value="{{showIfOperatorIndex}}" bindchange="onShowIfOperatorChange">
+              <view class="editor-picker">{{showIfOperators[showIfOperatorIndex].label}}</view>
+            </picker>
+          </view>
+          <view class="editor-item" wx:if="{{showIfOperators[showIfOperatorIndex].value !== 'empty' && showIfOperators[showIfOperatorIndex].value !== 'notEmpty'}}">
+            <view class="editor-label">比较值</view>
+            <input class="editor-input" value="{{showIfValue}}" bindinput="onShowIfValueInput" placeholder="如：咨询" />
+          </view>
+        </block>
+
+        <block wx:if="{{pagedForm}}">
+          <view class="editor-section">分节与跳转</view>
+          <view class="editor-item">
+            <view class="editor-label">所属分节 ID</view>
+            <input class="editor-input" value="{{sectionIdInput}}" bindinput="onSectionIdInput" placeholder="如 s1（与表单配置中分节 id 一致）" />
+          </view>
+          <view class="editor-item">
+            <view class="editor-label">选项跳转规则（JSON）</view>
+            <textarea class="editor-input" value="{{jumpRulesText}}" bindinput="onJumpRulesInput" placeholder='[{"value":"投诉","sectionId":"s2"}]' auto-height />
+          </view>
+        </block>
+      </scroll-view>
+
+      <view class="editor-footer">
+        <button class="btn-cancel" bindtap="closeEditor">取消</button>
+        <button class="btn-confirm" bindtap="saveEditor">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

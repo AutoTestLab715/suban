@@ -1,0 +1,91 @@
+<view class="page">
+  <nav-bar title="{{t.title}}" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view wx:if="{{loading}}" class="loading">{{t.loading}}</view>
+
+  <block wx:else>
+    <view class="status-card {{ready ? 'ready' : 'pending'}}">
+      <view class="status-dot"></view>
+      <view class="status-body">
+        <view class="status-title">{{ready ? t.ready : t.pending}}</view>
+        <view class="status-desc">{{ready ? t.readyDesc : t.pendingDesc}}</view>
+      </view>
+    </view>
+
+    <view class="meta-row">
+      <text>{{emailReady ? t.emailReady : t.emailPending}}</text>
+      <text wx:if="{{platformTemplateTitle}}">{{t.wechatTpl}}: {{platformTemplateTitle}}</text>
+      <text wx:else>{{t.noWechatTpl}}</text>
+      <text>{{t.subscribedAdmins}} {{subscribedAdminCount}}</text>
+    </view>
+
+    <view class="section">
+      <view class="section-title">{{t.emailSection}}</view>
+      <view class="form-card">
+        <view class="auth-tip">{{t.emailTip}}</view>
+
+        <view class="form-item row">
+          <view class="label">{{t.enableEmail}}</view>
+          <switch checked="{{email.enabled}}" bindchange="onEmailSwitch" color="#0c3d7a" />
+        </view>
+
+        <view class="form-field">
+          <view class="form-label">{{t.smtpHost}}</view>
+          <input class="form-input" value="{{email.smtpHost}}" placeholder="smtp.qq.com" data-key="smtpHost" bindinput="onEmailInput" />
+        </view>
+
+        <view class="form-field two-col">
+          <view class="col">
+            <view class="form-label">{{t.smtpPort}}</view>
+            <input class="form-input" type="number" value="{{email.smtpPort}}" placeholder="465" data-key="smtpPort" bindinput="onEmailInput" />
+          </view>
+          <view class="col secure-col">
+            <view class="form-label">{{t.ssl}}</view>
+            <switch checked="{{email.smtpSecure}}" bindchange="onSecureSwitch" color="#0c3d7a" />
+          </view>
+        </view>
+
+        <view class="form-field">
+          <view class="form-label">{{t.smtpUser}}</view>
+          <input class="form-input" value="{{email.smtpUser}}" placeholder="admin@example.com" data-key="smtpUser" bindinput="onEmailInput" />
+        </view>
+
+        <view class="form-field">
+          <view class="form-label">{{t.smtpPass}}</view>
+          <input class="form-input" password="{{true}}" value="{{email.smtpPass}}" placeholder="{{email.hasPassword ? t.savedPass : t.smtpPass}}" data-key="smtpPass" bindinput="onEmailInput" />
+        </view>
+
+        <view class="form-field">
+          <view class="form-label">{{t.fromEmail}}</view>
+          <input class="form-input" value="{{email.fromEmail}}" placeholder="{{email.smtpUser || 'admin@example.com'}}" data-key="fromEmail" bindinput="onEmailInput" />
+        </view>
+
+        <view class="form-field">
+          <view class="form-label">{{t.fromName}}</view>
+          <input class="form-input" value="{{email.fromName}}" placeholder="{{t.title}}" data-key="fromName" bindinput="onEmailInput" />
+        </view>
+
+        <view class="form-field">
+          <view class="form-label">{{t.adminEmails}}</view>
+          <textarea class="form-textarea" value="{{email.adminEmails}}" placeholder="boss@example.com" data-key="adminEmails" bindinput="onEmailInput" />
+          <view class="field-tip">{{t.adminEmailsTip}}</view>
+        </view>
+
+        <button class="btn primary" bindtap="onSaveEmail" loading="{{savingEmail}}" disabled="{{savingEmail}}">{{t.saveEmail}}</button>
+        <button class="btn ghost" bindtap="onTestEmail" loading="{{testingEmail}}" disabled="{{testingEmail || !emailReady}}">{{t.testEmail}}</button>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">{{t.wechatSection}}</view>
+      <view class="form-card">
+        <view class="auth-tip">{{t.wechatTip}}</view>
+        <view class="link-row" bindtap="goNotifyManage">{{t.manageWechat}}</view>
+        <button class="btn outline" bindtap="onSubscribe" disabled="{{!platformTemplateId}}">
+          {{subscribed ? t.subscribeAgain : t.subscribe}}
+        </button>
+        <button class="btn ghost" bindtap="onTestNotify" loading="{{testing}}" disabled="{{testing || !platformTemplateId}}">{{t.testWechat}}</button>
+      </view>
+    </view>
+  </block>
+</view>

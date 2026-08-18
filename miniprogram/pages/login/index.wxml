@@ -1,0 +1,83 @@
+<view class="page">
+  <view class="page-bg">
+    <view class="bg-blob bg-blob-a"></view>
+    <view class="bg-blob bg-blob-b"></view>
+    <view class="bg-grid"></view>
+  </view>
+
+  <nav-bar
+    title=""
+    showBack="{{true}}"
+    showAccount="{{false}}"
+    backUrl="/pages/index/index"
+    alwaysUseBackUrl="{{true}}"
+    dark="{{true}}"
+    bgColor="transparent"
+  />
+
+  <view class="login-body">
+    <view class="brand-block">
+      <view class="brand-logo">
+        <view class="logo-inner">速</view>
+        <view class="logo-ring"></view>
+      </view>
+      <view class="brand-name">速办智库</view>
+      <view class="brand-desc">智慧数字服务平台</view>
+      <view class="brand-divider"></view>
+      <view class="feature-tags">
+        <view class="feature-tag">
+          <view class="tag-dot"></view>
+          <text>企业资质</text>
+        </view>
+        <view class="feature-tag">
+          <view class="tag-dot"></view>
+          <text>融资贷款</text>
+        </view>
+        <view class="feature-tag">
+          <view class="tag-dot"></view>
+          <text>一站式咨询</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="login-card">
+      <view class="card-title">欢迎登录</view>
+      <view class="card-sub">官方验证，安全便捷</view>
+
+      <button
+        class="btn-login"
+        open-type="getPhoneNumber"
+        bindgetphonenumber="onGetPhoneNumber"
+        loading="{{loginLoading}}"
+        disabled="{{loginLoading || !agreedPrivacy}}"
+      >
+        <view class="btn-inner">
+          <text>手机号快捷登录</text>
+        </view>
+      </button>
+
+      <view class="privacy-row" bindtap="toggleAgree">
+        <view class="checkbox {{agreedPrivacy ? 'checked' : ''}}">
+          <text wx:if="{{agreedPrivacy}}" class="check-mark">✓</text>
+        </view>
+        <text class="privacy-text">我已阅读并同意</text>
+        <text class="privacy-link" catchtap="openPrivacy">《{{privacyContractName}}》</text>
+      </view>
+
+      <view class="trust-row">
+        <view class="trust-item">
+          <view class="trust-icon shield"></view>
+          <text>官方核验</text>
+        </view>
+        <view class="trust-item">
+          <view class="trust-icon lock"></view>
+          <text>加密存储</text>
+        </view>
+        <view class="trust-item">
+          <view class="trust-icon eye"></view>
+          <text>隐私保护</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

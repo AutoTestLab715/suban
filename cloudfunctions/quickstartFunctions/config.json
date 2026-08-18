@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "openapi": [
+      "wxacode.get",
+      "wxacode.getUnlimited",
+      "urlscheme.generate",
+      "urllink.generate",
+      "subscribeMessage.send",
+      "subscribeMessage.getTemplateList",
+      "phonenumber.getPhoneNumber"
+    ]
+  },
+  "timeout": 60,
+  "triggers": [
+    {
+      "name": "dailyDigest",
+      "type": "timer",
+      "config": "0 0 * * * * *"
+    },
+    {
+      "name": "autoBackup",
+      "type": "timer",
+      "config": "0 0 3 * * * *"
+    }
+  ]
+}

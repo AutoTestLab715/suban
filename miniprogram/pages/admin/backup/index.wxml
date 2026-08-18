@@ -1,0 +1,42 @@
+<view class="page">
+  <nav-bar title="数据备份" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view class="intro">
+    <view class="intro-title">提交数据云备份</view>
+    <view class="intro-desc">每次备份会同时生成 Excel 表格与 JSON 完整数据，保存在云存储。可在表单配置中开启每天 3:00 自动备份。</view>
+  </view>
+
+  <button class="backup-btn" bindtap="onBackupNow" loading="{{backing}}" disabled="{{backing}}">立即备份</button>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{!list.length}}" class="empty">暂无备份记录</view>
+
+  <view wx:else class="list">
+    <view class="card" wx:for="{{list}}" wx:key="_id">
+      <view class="card-head">
+        <text class="card-time">{{item.createTimeStr}}</text>
+        <text class="card-tag">{{item.sourceLabel}}</text>
+      </view>
+      <view class="card-meta">共 {{item.count}} 条提交记录 · Excel + JSON</view>
+      <view class="card-actions">
+        <view
+          wx:if="{{item.hasExcel}}"
+          class="card-action primary"
+          bindtap="onDownloadExcel"
+          data-fileid="{{item.excelFileID}}"
+        >
+          下载 Excel
+        </view>
+        <view
+          wx:else
+          class="card-action disabled"
+        >
+          无 Excel（旧备份）
+        </view>
+        <view class="card-action" bindtap="onDownloadJson" data-fileid="{{item.fileID}}">下载 JSON</view>
+        <view class="card-action subtle" bindtap="onCopyLink" data-fileid="{{item.excelFileID || item.fileID}}">复制链接</view>
+      </view>
+    </view>
+  </view>
+</view>

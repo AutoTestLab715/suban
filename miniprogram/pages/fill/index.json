@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "咨询填写",
+  "usingComponents": {
+    "cloud-tip-modal": "/components/cloudTipModal/index",
+    "nav-bar": "/components/navBar/index",
+    "dynamic-form": "/components/dynamicForm/index",
+    "privacy-modal": "/components/privacyModal/index"
+  }
+}

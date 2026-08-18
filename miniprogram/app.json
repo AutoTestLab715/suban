@@ -1,0 +1,82 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/biaoxun/index",
+    "pages/biaoxun/detail/index",
+    "pages/register/index",
+    "pages/fill/index",
+    "pages/list/index",
+    "pages/success/index",
+    "pages/editsubmit/index",
+    "pages/voucher/index",
+    "pages/profile/index",
+    "pages/admin/index/index",
+    "pages/admin/detail/index",
+    "pages/admin/template/index",
+    "pages/admin/fields/index",
+    "pages/admin/share/index",
+    "pages/admin/stats/index",
+    "pages/admin/edit/index",
+    "pages/admin/logs/index",
+    "pages/admin/checkin/index",
+    "pages/admin/export/index",
+    "pages/admin/team/index",
+    "pages/admin/forms/index",
+    "pages/admin/backup/index",
+    "pages/admin/weblogin/index",
+    "pages/admin/notify/index",
+    "pages/admin/notifymanage/index",
+    "pages/forms/index",
+    "pages/web/index",
+    "pages/login/index",
+    "pages/privacy/index"
+  ],
+  "window": {
+    "backgroundColor": "#f0f2f5",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0c3d7a",
+    "navigationBarTitleText": "信息提交",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#8b95a5",
+    "selectedColor": "#0c3d7a",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/biaoxun/index",
+        "text": "标讯",
+        "iconPath": "images/tab/biaoxun.png",
+        "selectedIconPath": "images/tab/biaoxun-active.png"
+      },
+      {
+        "pagePath": "pages/fill/index",
+        "text": "咨询填写",
+        "iconPath": "images/tab/forms.png",
+        "selectedIconPath": "images/tab/forms-active.png"
+      },
+      {
+        "pagePath": "pages/list/index",
+        "text": "我的提交",
+        "iconPath": "images/tab/list.png",
+        "selectedIconPath": "images/tab/list-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "images/tab/profile.png",
+        "selectedIconPath": "images/tab/profile-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

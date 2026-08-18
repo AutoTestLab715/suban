@@ -1,0 +1,336 @@
+.form-item {
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid var(--gov-border-light);
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-item-textarea {
+  position: relative;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: var(--gov-text);
+  margin-bottom: 16rpx;
+  font-weight: 600;
+  padding-left: 14rpx;
+  border-left: 4rpx solid var(--gov-primary);
+}
+
+.required {
+  color: var(--gov-red);
+  margin-right: 4rpx;
+}
+
+.form-input {
+  font-size: 30rpx;
+  color: var(--gov-text);
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #f8fafc;
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  padding: 0 24rpx;
+}
+
+.address-detail {
+  margin-top: 16rpx;
+}
+
+.amount-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.amount-prefix {
+  font-size: 32rpx;
+  color: var(--gov-text);
+  font-weight: 600;
+}
+
+.amount-input {
+  flex: 1;
+}
+
+.form-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 30rpx;
+  color: var(--gov-text);
+  height: 80rpx;
+  background: #f8fafc;
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  padding: 0 24rpx;
+}
+
+.form-picker.placeholder {
+  color: #b0bac5;
+}
+
+.picker-arrow {
+  width: 20rpx;
+  height: 20rpx;
+  transform: rotate(90deg);
+  opacity: 0.35;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 180rpx;
+  font-size: 30rpx;
+  color: var(--gov-text);
+  line-height: 1.6;
+  background: #f8fafc;
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  padding: 20rpx 24rpx;
+  box-sizing: border-box;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 22rpx;
+  color: var(--gov-text-muted);
+  margin-top: 8rpx;
+}
+
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.radio-item,
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 28rpx;
+  color: var(--gov-text);
+  padding: 16rpx 20rpx;
+  background: #f8fafc;
+  border: 1rpx solid var(--gov-border-light);
+  border-radius: var(--gov-radius);
+}
+
+.image-tip {
+  font-size: 22rpx;
+  color: var(--gov-text-muted);
+  font-weight: 400;
+  margin-left: 8rpx;
+}
+
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.image-item {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--gov-radius);
+  border: 1rpx solid var(--gov-border);
+}
+
+.image-remove {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background: var(--gov-red);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 36rpx;
+  font-size: 24rpx;
+}
+
+.image-add {
+  width: 160rpx;
+  height: 160rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fafbfc;
+  border: 1rpx dashed var(--gov-border);
+  border-radius: var(--gov-radius);
+  color: var(--gov-text-muted);
+}
+
+.image-add-icon {
+  font-size: 40rpx;
+  line-height: 1;
+  margin-bottom: 4rpx;
+}
+
+.image-add-text {
+  font-size: 22rpx;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 20rpx;
+  background: #fafbfc;
+  border: 1rpx solid var(--gov-border-light);
+  border-radius: var(--gov-radius);
+}
+
+.file-name {
+  font-size: 26rpx;
+  color: var(--gov-text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-remove {
+  color: var(--gov-red);
+  font-size: 28rpx;
+  padding: 0 8rpx;
+}
+
+.file-add {
+  padding: 24rpx;
+  text-align: center;
+  background: #fafbfc;
+  border: 1rpx dashed var(--gov-border);
+  border-radius: var(--gov-radius);
+  font-size: 28rpx;
+  color: var(--gov-primary);
+}
+
+.rating-row {
+  display: flex;
+  gap: 12rpx;
+}
+
+.star {
+  font-size: 48rpx;
+  color: #d9e2ec;
+}
+
+.star.active {
+  color: #d4b44a;
+}
+
+.sign-preview-wrap {
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  overflow: hidden;
+}
+
+.sign-preview {
+  width: 100%;
+  height: 200rpx;
+  background: #fafbfc;
+}
+
+.sign-btns {
+  display: flex;
+  gap: 24rpx;
+  padding: 16rpx 20rpx;
+  border-top: 1rpx solid var(--gov-border-light);
+}
+
+.sign-btn {
+  font-size: 26rpx;
+  color: var(--gov-primary);
+}
+
+.sign-btn.muted {
+  color: var(--gov-text-muted);
+}
+
+.sign-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 40rpx;
+  background: #fafbfc;
+  border: 1rpx dashed var(--gov-border);
+  border-radius: var(--gov-radius);
+  font-size: 28rpx;
+  color: var(--gov-text-secondary);
+}
+
+.sign-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 53, 110, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+}
+
+.sign-dialog {
+  width: 100%;
+  background: var(--gov-card);
+  border-radius: var(--gov-radius-lg);
+  padding: 32rpx;
+  border: 1rpx solid var(--gov-border);
+}
+
+.sign-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--gov-text);
+  text-align: center;
+  margin-bottom: 20rpx;
+  letter-spacing: 2rpx;
+}
+
+.sign-canvas {
+  width: 100%;
+  height: 300rpx;
+  background: #fafbfc;
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+}
+
+.sign-dialog-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.sign-action {
+  flex: 1;
+  background: #f4f6f9;
+  color: var(--gov-text-secondary);
+  border: 1rpx solid var(--gov-border);
+  border-radius: var(--gov-radius);
+}
+
+.sign-action.primary {
+  background: var(--gov-primary);
+  color: #fff;
+  border-color: var(--gov-primary);
+}

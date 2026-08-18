@@ -1,0 +1,84 @@
+<view class="page">
+  <view class="hero" bindtap="goFill" hover-class="hero-pressed">
+    <image class="hero-image" src="/images/home/group-reception.jpg" mode="aspectFill" />
+  </view>
+
+  <view class="company-card">
+    <view class="company-logo">速办</view>
+    <view class="company-copy">
+      <text class="company-name">速办智库企业服务</text>
+      <text class="company-desc">专业顾问一对一，全程跟进办理</text>
+    </view>
+  </view>
+
+  <view class="service-panel">
+    <view class="main-service-grid">
+      <view
+        wx:for="{{mainServices}}"
+        wx:key="key"
+        class="main-service"
+        data-key="{{item.key}}"
+        data-target="{{item.target}}"
+        bindtap="goService"
+        hover-class="service-pressed"
+      >
+        <view class="service-mark {{item.iconClass}}">
+          <image class="service-icon" src="{{item.icon}}" mode="aspectFit" />
+        </view>
+        <text class="main-service-name">{{item.name}}</text>
+        <text class="main-service-desc">{{item.desc}}</text>
+      </view>
+    </view>
+
+    <view class="quick-service-grid">
+      <view
+        wx:for="{{quickServices}}"
+        wx:key="key"
+        class="quick-service"
+        data-key="{{item.key}}"
+        data-target="{{item.target}}"
+        bindtap="goService"
+        hover-class="service-pressed"
+      >
+        <view class="quick-mark {{item.iconClass}}">
+          <image class="service-icon quick" src="{{item.icon}}" mode="aspectFit" />
+        </view>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="notice-section">
+    <view class="section-head">
+      <view class="section-title-wrap">
+        <view class="section-title-icon"></view>
+        <text class="section-title">最新公告</text>
+      </view>
+      <view class="section-more" bindtap="goBiaoxun">
+        <text>查看更多</text>
+        <text class="more-arrow">›</text>
+      </view>
+    </view>
+
+    <view wx:if="{{latestLoading}}" class="notice-state">
+      <view class="spinner"></view>
+      <text>正在加载最新标讯</text>
+    </view>
+
+    <view wx:elif="{{latestError}}" class="notice-state">
+      <text>公告加载失败</text>
+      <text class="retry-link" bindtap="loadLatestNotices">点击重试</text>
+    </view>
+
+    <view wx:elif="{{!latestNotices.length}}" class="notice-state">暂无最新公告</view>
+
+    <view wx:else class="notice-list">
+      <biaoxun-notice-card
+        wx:for="{{latestNotices}}"
+        wx:key="id"
+        item="{{item}}"
+        bind:open="onNoticeCardOpen"
+      />
+    </view>
+  </view>
+</view>

@@ -1,0 +1,59 @@
+<view class="page">
+  <nav-bar title="订阅通知管理" showBack="{{true}}" showAccount="{{false}}" backUrl="/pages/admin/index/index" />
+
+  <view class="header">
+    <view class="header-desc">管理微信订阅模板。建议优先在「消息通知」页配置邮箱，用户提交后自动发邮件，不受一次授权一次发送限制。</view>
+    <button class="create-btn" size="mini" bindtap="onAdd">+ 添加模板</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{!list.length}}" class="empty">
+    <view class="empty-text">暂无通知模板</view>
+    <view class="empty-tip">请先在微信公众平台添加订阅消息，再点击上方按钮添加</view>
+  </view>
+
+  <view wx:else class="list">
+    <view class="card" wx:for="{{list}}" wx:key="_id">
+      <view class="card-head">
+        <view class="card-title">{{item.name}}</view>
+        <view class="tag {{item.enabled ? 'on' : 'off'}}">{{item.enabled ? '启用' : '停用'}}</view>
+      </view>
+      <view class="card-meta">公众平台：{{item.platformTemplateTitle || '—'}}</view>
+      <view class="card-meta">授权状态：{{item.subscribed ? '已授权' : '未授权'}}</view>
+      <view wx:if="{{!item.platformExists}}" class="card-warn">公众平台模板可能已删除，请重新编辑保存</view>
+      <view class="card-actions">
+        <text class="action primary" bindtap="onSubscribe" data-id="{{item.platformTemplateId}}">授权</text>
+        <text class="action" bindtap="onTest" data-id="{{item._id}}">{{testingId === item._id ? '发送中' : '测试'}}</text>
+        <text class="action" bindtap="onEdit" data-id="{{item._id}}">编辑</text>
+        <text class="action danger" bindtap="onDelete" data-id="{{item._id}}" data-name="{{item.name}}">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-link" bindtap="goFormNotify">前往表单消息通知设置 →</view>
+
+  <view wx:if="{{showEditor}}" class="mask" bindtap="onCloseEditor">
+    <view class="editor" catchtap="">
+      <view class="editor-title">{{editingId ? '编辑通知模板' : '添加通知模板'}}</view>
+      <view class="form-item">
+        <view class="label">模板名称</view>
+        <input class="input" value="{{formName}}" bindinput="onFormNameInput" placeholder="如：留言通知、审核提醒" />
+      </view>
+      <view class="form-item">
+        <view class="label">公众平台模板</view>
+        <picker mode="selector" range="{{editorPlatforms}}" range-key="title" value="{{formPlatformIndex}}" bindchange="onPlatformChange">
+          <view class="picker-val">{{editorPlatforms[formPlatformIndex].title || '请选择'}}</view>
+        </picker>
+      </view>
+      <view class="form-item row">
+        <view class="label">启用</view>
+        <switch checked="{{formEnabled}}" bindchange="onFormEnabledChange" color="#0c3d7a" />
+      </view>
+      <view class="editor-actions">
+        <button class="btn ghost" bindtap="onCloseEditor">取消</button>
+        <button class="btn primary" bindtap="onSaveEditor" loading="{{saving}}">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

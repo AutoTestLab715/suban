@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block title %}福建公告抓取 · 全文检索{% endblock %}
+{% block content %}
+<section class="hero"><div class="hero-copy"><span class="eyebrow">PUBLIC NOTICE HUB</span><h1>把公开公告，<em>一次找全</em></h1><p>覆盖政府采购网、科技厅、工信厅、军队采购网与国铁采购网，按关键词、全文、区划和日期组合检索。</p><div class="hero-tags"><span>五源检索</span><span>增量入库</span><span>实时进度</span></div></div><div class="hero-panel"><div class="hero-panel-top"><span class="status-dot"></span><span>采集服务运行正常</span></div><div class="hero-panel-number">5000 <small>WEB PORT</small></div><p>低频、可追踪的公告采集工作台</p></div></section>
+<section class="stats-grid" aria-label="当前状态"><div class="stat-card"><span class="stat-icon teal">◎</span><div><small>当前数据源</small><strong id="stat-source">政府采购网</strong></div></div><div class="stat-card"><span class="stat-icon blue">#</span><div><small>已展示结果</small><strong id="stat-count">0 条</strong></div></div><div class="stat-card"><span class="stat-icon amber">↻</span><div><small>任务状态</small><strong id="stat-status">就绪</strong></div></div></section>
+<section class="card memory-card" aria-labelledby="memory-heading"><div class="section-heading memory-heading"><div><span class="section-kicker">SERVER HEALTH</span><h2 id="memory-heading">服务器内存</h2></div><span class="muted small" id="memory-updated">实时监测</span></div><div class="memory-layout"><div id="memory-chart" class="memory-chart" role="img" aria-label="服务器可用内存加载中"><div class="memory-chart-center"><strong id="memory-available-percent">--</strong><span>可用内存</span></div></div><div class="memory-details"><div class="memory-highlight"><span class="memory-dot available"></span><div><small>可用内存</small><strong id="memory-available">--</strong></div></div><div class="memory-metric"><span class="memory-dot used"></span><div><small>已用内存</small><strong id="memory-used">--</strong></div></div><div class="memory-metric"><span class="memory-dot total"></span><div><small>总内存</small><strong id="memory-total">--</strong></div></div></div></div><p id="memory-status" class="memory-status" aria-live="polite">正在读取服务器指标…</p></section>
+<section class="card disk-card" aria-labelledby="disk-heading"><div class="section-heading disk-heading"><div><span class="section-kicker">DISK STORAGE</span><h2 id="disk-heading">服务器硬盘空间</h2></div><span class="muted small" id="disk-updated">实时监测</span></div><div class="disk-layout"><div id="disk-usage-track" class="disk-usage-track" role="img" aria-label="服务器硬盘使用率加载中"><div id="disk-usage-bar" class="disk-usage-bar" style="width:0%"></div></div><div class="disk-usage-label"><strong id="disk-usage-percent">--</strong><span>已使用</span></div><div class="disk-metrics"><div><small>可用空间</small><strong id="disk-available">--</strong></div><div><small>已用空间</small><strong id="disk-used">--</strong></div><div><small>总空间</small><strong id="disk-total">--</strong></div></div></div><p id="disk-status" class="disk-status" aria-live="polite">正在读取服务器硬盘指标…</p></section>
+<section class="card toolbar"><div class="section-heading"><div><span class="section-kicker">SEARCH</span><h2>设置检索条件</h2></div><span class="muted small">先预览数量，确认后再抓取</span></div>
+<form id="crawl-form" class="search-form qwjsy-form" novalidate>
+<label class="field"><span>数据源</span><select id="site" aria-label="数据源"><option value="zfcg" selected>政府采购网</option><option value="kjt">省科技厅信息公开</option><option value="gxt">福建省工业和信息化厅</option><option value="plap">军队采购网</option><option value="railway">国铁采购网</option></select></label>
+<label class="field field-keyword"><span>关键词</span><input id="keyword" type="text" value="" placeholder="可留空，抓取全部公告" autocomplete="off"></label>
+<label class="field"><span>检索方式</span><select id="mode" aria-label="检索方式"><option value="content" selected>搜全文</option><option value="title">搜标题</option></select></label>
+<label class="field"><span>区划码 <b>选填</b></span><input id="region" type="text" inputmode="numeric" placeholder="如 350001"></label>
+<div class="field field-date"><span>发布时间范围</span><div class="date-range"><label><span class="sr-only">开始日期</span><input id="start" type="date"></label><i>至</i><label><span class="sr-only">结束日期</span><input id="end" type="date"></label></div></div>
+<label class="field"><span>条数上限</span><select id="crawl-limit" aria-label="条数上限"><option value="50">50 条</option><option value="100">100 条</option><option value="200" selected>200 条</option><option value="500">500 条</option><option value="1000">1000 条</option><option value="5000">5000 条</option><option value="0">不限</option></select></label>
+<div class="form-actions"><button id="run" type="submit" class="btn btn-primary"><span aria-hidden="true">⌕</span> 开始抓取</button><button id="stop-crawl" type="button" class="btn btn-danger hidden">停止任务</button><button id="clear-form" type="button" class="btn btn-ghost">清空条件</button></div>
+</form><p id="hint" class="source-hint"></p><p id="message" class="message" aria-live="polite">就绪</p>
+<div id="confirm-panel" class="crawl-confirm-panel hidden" role="status"><p id="confirm-text" class="confirm-text"></p><div class="confirm-actions"><button type="button" id="confirm-yes" class="btn btn-primary">确认抓取</button><button type="button" id="confirm-no" class="btn btn-ghost">取消</button></div></div>
+<div id="progress" class="crawl-progress-panel hidden" aria-live="polite"><div class="progress-meta"><span id="phase">准备中</span><span id="percent">0%</span></div><div class="progress-bar"><div id="bar" class="progress-bar-fill" style="width:0%"></div></div><div id="live-detail" class="crawl-live-detail hidden"><div class="live-now"><span class="live-label">刚抓到</span><a id="live-title" class="live-title" href="#" target="_blank" rel="noopener"></a><p id="live-meta" class="muted small"></p><p id="live-snippet" class="live-snippet muted small"></p></div><ul id="live-recent" class="live-recent"></ul></div></div>
+</section>
+
+<style>
+.sched-source-blocks{display:flex;flex-direction:column;gap:.85rem;margin:.2rem 0 .75rem}
+.sched-source-block{border:1px solid rgba(15,23,42,.08);border-radius:12px;padding:.75rem .85rem;background:rgba(248,250,252,.85)}
+.sched-source-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.45rem}
+.sched-source-head strong{font-size:.95rem}
+.sched-times-list{display:flex;flex-direction:column;gap:.45rem}
+.sched-time-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.sched-time-row input[type=time]{min-width:8.5rem}
+.sched-time-row .sched-remove{min-width:2.4rem;padding:.25rem .6rem;line-height:1.2}
+.sched-time-row .sched-remove:disabled{opacity:.45;cursor:not-allowed}
+.btn-danger{color:#fff;background:#dc2626}
+.btn-danger:hover{filter:brightness(1.08)}
+.btn-danger:disabled{opacity:.55;cursor:not-allowed}
+</style>
+<section class="card schedule-card"><div class="section-heading"><div><span class="section-kicker">SCHEDULE</span><h2>每日定时抓取</h2></div><span class="muted small" id="schedule-label">加载中…</span></div>
+<form id="schedule-form" class="schedule-form" novalidate>
+<div id="sched-source-blocks" class="sched-source-blocks" aria-label="各来源定时"></div>
+<label class="field"><span>回看天数</span><input id="sched-lookback" type="number" min="1" max="30" step="1" value="3"></label>
+<label class="field field-check"><span>启用</span><label class="check-row"><input id="sched-enabled" type="checkbox" checked> 采购网 + 科技厅 + 工信厅 + 军队采购网 + 国铁采购网自动增量</label></label>
+<div class="form-actions"><button id="sched-save" type="submit" class="btn btn-primary">保存定时</button></div>
+</form>
+<p id="schedule-msg" class="message" aria-live="polite"></p>
+</section>
+<section class="card results-card"><div class="list-header"><div class="section-heading compact"><div><span class="section-kicker">RESULTS</span><h2>公告结果</h2></div><span id="result-source" class="source-label">政府采购网</span></div><div class="result-tools"><span class="result-count">共 <strong id="count">0</strong> 条 <span id="file" class="file-label"></span></span><select id="filter-source" aria-label="来源筛选"><option value="">全部来源</option><option value="zfcg">政府采购网</option><option value="kjt">科技厅</option><option value="gxt">省工信厅</option><option value="plap">军队采购网</option><option value="railway">国铁采购网</option></select><button type="button" id="refresh-results" class="btn btn-ghost btn-small">刷新</button></div></div><ul id="list" class="notice-list"></ul><div id="empty" class="empty-state"><div class="empty-icon" aria-hidden="true">⌕</div><p>填写条件后点击「开始抓取」，确认数量后再正式抓取。</p></div><nav id="pager" class="pagination hidden" aria-label="分页"><button type="button" id="prev-page" class="btn btn-ghost">上一页</button><span id="page-info">第 0 / 0 页</span><button type="button" id="next-page" class="btn btn-ghost">下一页</button></nav></section>
+{% endblock %}
+{% block scripts %}
+<script>
+(function(){
+const BASE={{ app_prefix|tojson }},PER_PAGE={{ per_page }},ZFCG_URL={{ page_url|tojson }},KJT_URL={{ kjt_page_url|tojson }},GXT_URL={{ gxt_page_url|tojson }},PLAP_URL={{ plap_page_url|tojson }},RAILWAY_URL={{ railway_page_url|tojson }};
+const $=id=>document.getElementById(id),form=$("crawl-form"),siteEl=$("site"),runBtn=$("run"),stopBtn=$("stop-crawl"),msgEl=$("message"),progressEl=$("progress"),phaseEl=$("phase"),percentEl=$("percent"),barEl=$("bar"),listEl=$("list"),countEl=$("count"),fileEl=$("file"),emptyEl=$("empty"),pagerEl=$("pager"),pageInfoEl=$("page-info"),prevBtn=$("prev-page"),nextBtn=$("next-page"),filterSource=$("filter-source"),confirmPanel=$("confirm-panel"),confirmText=$("confirm-text"),liveDetailEl=$("live-detail"),liveTitleEl=$("live-title"),liveMetaEl=$("live-meta"),liveSnippetEl=$("live-snippet"),liveRecentEl=$("live-recent"),memoryCardEl=$("memory-chart").closest(".memory-card"),memoryChartEl=$("memory-chart"),memoryAvailablePercentEl=$("memory-available-percent"),memoryAvailableEl=$("memory-available"),memoryUsedEl=$("memory-used"),memoryTotalEl=$("memory-total"),memoryUpdatedEl=$("memory-updated"),memoryStatusEl=$("memory-status"),diskCardEl=$("disk-usage-bar").closest(".disk-card"),diskTrackEl=$("disk-usage-track"),diskUsageBarEl=$("disk-usage-bar"),diskUsagePercentEl=$("disk-usage-percent"),diskAvailableEl=$("disk-available"),diskUsedEl=$("disk-used"),diskTotalEl=$("disk-total"),diskUpdatedEl=$("disk-updated"),diskStatusEl=$("disk-status");
+let timer=null,currentPage=1,totalPages=0,pendingPayload=null;
+const api=path=>BASE+path,esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"),toDT=(v,end)=>v?v+(end?" 23:59:59":" 00:00:00"):"";
+function message(text,state){msgEl.textContent=text||"";msgEl.className="message"+(state?" message-"+state:"");}
+function sync(){const site=siteEl.value,gxt=site==="gxt",kjt=site==="kjt",plap=site==="plap",railway=site==="railway",label=railway?"国铁采购网":plap?"军队采购网":gxt?"福建省工业和信息化厅":kjt?"省科技厅信息公开":"政府采购网";$("hint").innerHTML=railway?`当前：国铁采购网 · <a href="${RAILWAY_URL}" target="_blank" rel="noopener">打开官网</a>（采购公告+采购结果，低频断点续跑，遇频控自动重置）`:plap?`当前：军队采购网 · <a href="${PLAP_URL}" target="_blank" rel="noopener">采购大厅</a>（仅抓 cggg 采购公告，含详情页；已排除知情告知等非大厅数据。日常增量建议 10 页 + 200 条）`:gxt?`当前：省工信厅 · <a href="${GXT_URL}" target="_blank" rel="noopener">打开政策法规页</a>（国家政策/省级政策/部门政策文件，慢速增量）`:kjt?`当前：省科技厅 · <a href="${KJT_URL}" target="_blank" rel="noopener">打开官网</a>（只抓通知公告与政策文件，慢速增量）`:`当前：政府采购网 · <a href="${ZFCG_URL}" target="_blank" rel="noopener">打开官网检索</a>`;$("stat-source").textContent=label;$("result-source").textContent=label;filterSource.value=siteEl.value;$("mode").closest(".field").classList.toggle("hidden",gxt||plap);$("region").closest(".field").classList.toggle("hidden",gxt||kjt||plap||railway);document.querySelector(".field-date").classList.toggle("hidden",gxt||kjt||plap);}
+function render(items){if(!items.length){listEl.innerHTML="";emptyEl.classList.remove("hidden");emptyEl.querySelector("p").textContent="暂无结果，调整条件后再试试。";return;}emptyEl.classList.add("hidden");listEl.innerHTML=items.map(x=>{const gxt=x.source==="gxt",kjt=x.source==="kjt",plap=x.source==="plap",railway=x.source==="railway",src=railway?"国铁采购":plap?"军队采购":gxt?"工信厅":kjt?"科技厅":"采购网",cls=railway?"badge-railway":plap?"badge-plap":gxt?"badge-gxt":kjt?"badge-kjt":"badge-fujian",meta=[x.project_no&&`编号：${esc(x.project_no)}`,x.purchaser&&`${plap?"采购单位":"发布机关"}：${esc(x.purchaser)}`,x.agency&&`代理：${esc(x.agency)}`,x.budget&&`预算：${esc(x.budget)}`].filter(Boolean),text=x.content_text||"",href=x.id?api(`/notice/${encodeURIComponent(x.id)}`):esc(x.url||"#");if(text)meta.push(`<span class="brief-text">${esc(text.slice(0,110))}${text.length>110?"...":""}</span>`);return `<li class="notice-item"><div class="notice-meta"><span class="badge ${cls}">${src}</span>${x.notice_name?`<span class="badge badge-light">${esc(x.notice_name)}</span>`:""}${x.region?`<span class="badge badge-light">${esc(x.region)}</span>`:""}<time>${esc(x.notice_time||"未标注日期")}</time></div><a class="notice-title" href="${href}">${esc(x.title||"(无标题)")}<span aria-hidden="true">↗</span></a>${meta.length?`<div class="notice-brief">${meta.map(v=>`<span>${v}</span>`).join("")}</div>`:""}</li>`}).join("");}
+function pager(){const show=totalPages>0;pagerEl.classList.toggle("hidden",!show);pageInfoEl.textContent=show?`第 ${currentPage} / ${totalPages} 页`:"第 0 / 0 页";prevBtn.disabled=currentPage<=1;nextBtn.disabled=currentPage>=totalPages;}
+async function load(page){const q=new URLSearchParams({page:String(page),per_page:String(PER_PAGE)});if(filterSource.value)q.set("source",filterSource.value);const r=await fetch(api(`/api/results?${q}`)),d=await r.json();if(!r.ok||d.ok===false)throw Error(d.message||"结果加载失败");currentPage=d.page||1;totalPages=d.pages||0;countEl.textContent=d.total||0;$("stat-count").textContent=`${d.total||0} 条`;fileEl.textContent=d.output_file&&d.output_file!=="session"?"· 已保存":"";render(d.items||[]);pager();}
+function apply(d){const running=!!d.running,status=running?"抓取中":(d.ok===false?"需要关注":(d.message||"就绪"));message(d.message||"",d.ok===false?"error":(running?"running":"success"));$("stat-status").textContent=status;runBtn.disabled=running;runBtn.textContent=running?"抓取中...":"开始抓取";stopBtn.classList.toggle("hidden",!running);stopBtn.disabled=!running;progressEl.classList.toggle("hidden",!running);phaseEl.textContent=d.phase||(running?"抓取中":"完成");const p=Math.max(0,Math.min(100,Number(d.progress)||0));percentEl.textContent=`${p}%`;barEl.style.width=`${p}%`;const latest=d.latest,recent=d.recent||[];if(running&&(latest||recent.length)){liveDetailEl.classList.remove("hidden");if(latest){liveTitleEl.href=latest.id?api(`/notice/${encodeURIComponent(latest.id)}`):latest.url||"#";liveTitleEl.textContent=latest.title||"(无标题)";liveMetaEl.textContent=[d.count&&`第 ${d.count} 条`,latest.notice_name,latest.region,latest.notice_time].filter(Boolean).join(" · ");liveSnippetEl.textContent=latest.snippet||"";liveSnippetEl.classList.toggle("hidden",!latest.snippet);}liveRecentEl.innerHTML=recent.slice(0,8).map(r=>`<li><time>${esc(r.notice_time||"")}</time><a href="${r.id?api(`/notice/${encodeURIComponent(r.id)}`):r.url||"#"}">${esc(r.title||"(无标题)")}</a></li>`).join("");}else if(!running)liveDetailEl.classList.add("hidden");}
+function formatBytes(value){const bytes=Number(value);if(!Number.isFinite(bytes)||bytes<0)return"--";const units=["B","KB","MB","GB","TB"];let n=bytes,unit=0;while(n>=1024&&unit<units.length-1){n/=1024;unit++;}return`${n.toFixed(unit?1:0)} ${units[unit]}`;}
+function renderMemory(d){const mem=d.memory||{},total=Number(mem.total)||0,available=Math.max(0,Math.min(total,Number(mem.available)||0)),availablePercent=total?Math.max(0,Math.min(100,Number(mem.available_percent??available/total*100))):0;memoryChartEl.style.setProperty("--memory-available-angle",`${availablePercent*3.6}deg`);memoryChartEl.setAttribute("aria-label",`服务器可用内存 ${availablePercent.toFixed(1)}%，${formatBytes(available)}`);memoryAvailablePercentEl.textContent=`${availablePercent.toFixed(1)}%`;memoryAvailableEl.textContent=formatBytes(available);memoryUsedEl.textContent=formatBytes(Math.max(0,total-available));memoryTotalEl.textContent=formatBytes(total);const updated=Number(mem.updated_at);memoryUpdatedEl.textContent=updated?`更新于 ${new Date(updated*1000).toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`:"实时监测";const warning=availablePercent<10;memoryCardEl.classList.toggle("is-warning",warning);memoryCardEl.classList.remove("is-error");memoryStatusEl.textContent=warning?"可用内存偏低，请关注服务器负载":"可用内存充足";}
+async function loadMemory(){try{const r=await fetch(api("/api/server/memory"),{cache:"no-store"}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.message||"读取失败");renderMemory(d);}catch(e){memoryCardEl.classList.add("is-error");memoryStatusEl.textContent="暂时无法读取服务器内存指标";memoryUpdatedEl.textContent="连接异常";}}
+function renderDisk(d){const disk=d.disk||{},total=Number(disk.total)||0,used=Math.max(0,Math.min(total,Number(disk.used)||0)),available=Math.max(0,total-used),usagePercent=total?Math.max(0,Math.min(100,Number(disk.usage_percent??used/total*100))):0;diskUsageBarEl.style.width=`${usagePercent}%`;diskTrackEl.setAttribute("aria-label",`服务器硬盘已使用 ${usagePercent.toFixed(1)}%，可用 ${formatBytes(available)}`);diskUsagePercentEl.textContent=`${usagePercent.toFixed(1)}%`;diskAvailableEl.textContent=formatBytes(available);diskUsedEl.textContent=formatBytes(used);diskTotalEl.textContent=formatBytes(total);const updated=Number(disk.updated_at);diskUpdatedEl.textContent=updated?`更新于 ${new Date(updated*1000).toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`:"实时监测";const warning=usagePercent>=85;diskCardEl.classList.toggle("is-warning",warning);diskCardEl.classList.remove("is-error");diskStatusEl.textContent=warning?"硬盘使用率偏高，请及时清理或扩容":"硬盘空间充足";}
+async function loadDisk(){try{const r=await fetch(api("/api/server/disk"),{cache:"no-store"}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.message||"读取失败");renderDisk(d);}catch(e){diskCardEl.classList.add("is-error");diskStatusEl.textContent="暂时无法读取服务器硬盘指标";diskUpdatedEl.textContent="连接异常";}}
+async function stopCrawl(){stopBtn.disabled=true;try{const r=await fetch(api("/api/crawl/stop"),{method:"POST"}),d=await r.json();message(d.message||"",r.ok?"running":"error");if(r.ok)poll();}catch(e){message("停止请求失败，请稍后重试。","error");stopBtn.disabled=false;}}
+stopBtn.addEventListener("click",()=>stopCrawl());
+async function poll(){try{const r=await fetch(api("/api/crawl/status")),d=await r.json();apply(d);if(d.running)await load(1).catch(()=>{});if(!d.running&&timer){clearInterval(timer);timer=null;await load(1);}}catch(e){message("暂时无法连接服务，请稍后刷新。","error");$("stat-status").textContent="连接异常";}}
+siteEl.addEventListener("change",()=>{sync();load(1).catch(()=>{})});filterSource.addEventListener("change",()=>{$("result-source").textContent=filterSource.value==="railway"?"国铁采购网":filterSource.value==="plap"?"军队采购网":filterSource.value==="gxt"?"福建省工业和信息化厅":filterSource.value==="kjt"?"省科技厅信息公开":filterSource.value==="zfcg"?"政府采购网":"全部来源";load(1).catch(()=>{})});$("refresh-results").addEventListener("click",()=>{const b=$("refresh-results");b.disabled=true;load(currentPage).catch(()=>message("结果刷新失败，请稍后重试。","error")).finally(()=>b.disabled=false)});$("clear-form").addEventListener("click",()=>{form.reset();siteEl.value="zfcg";filterSource.value="zfcg";$("crawl-limit").value="200";sync();message("已清空条件","success");load(1).catch(()=>{})});prevBtn.addEventListener("click",()=>{if(currentPage>1)load(currentPage-1).catch(()=>{})});nextBtn.addEventListener("click",()=>{if(currentPage<totalPages)load(currentPage+1).catch(()=>{})});
+function payload(){return{site:siteEl.value,keyword:$("keyword").value.trim(),mode:$("mode").value,pages:0,limit:Number($("crawl-limit").value),region:$("region").value.trim(),start:toDT($("start").value,false),end:toDT($("end").value,true)}}function hide(){confirmPanel.classList.add("hidden");pendingPayload=null;runBtn.disabled=false;runBtn.textContent="开始抓取"}
+async function start(p){filterSource.value=p.site;runBtn.disabled=true;runBtn.textContent="抓取中...";progressEl.classList.remove("hidden");confirmPanel.classList.add("hidden");emptyEl.classList.add("hidden");listEl.innerHTML="";pagerEl.classList.add("hidden");countEl.textContent="0";$("stat-count").textContent="0 条";try{const r=await fetch(api("/api/crawl"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...p,confirm:true})}),d=await r.json();message(d.message||"",r.ok?"running":"error");if(!r.ok){runBtn.disabled=false;runBtn.textContent="开始抓取";progressEl.classList.add("hidden");return;}if(timer)clearInterval(timer);timer=setInterval(poll,1000);poll()}catch(e){message("启动失败，请检查服务连接。","error");runBtn.disabled=false;runBtn.textContent="开始抓取";progressEl.classList.add("hidden")}}
+$("confirm-yes").addEventListener("click",()=>{if(pendingPayload){const p=pendingPayload;pendingPayload=null;start(p)}});$("confirm-no").addEventListener("click",hide);
+form.addEventListener("submit",async e=>{e.preventDefault();const p=payload();if(p.start&&p.end&&p.start>p.end){message("结束日期不能早于开始日期。","error");return;}runBtn.disabled=true;runBtn.textContent="查询数量...";confirmPanel.classList.add("hidden");message("正在查询将要抓取的数量…","running");try{const r=await fetch(api("/api/crawl/preview"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}),d=await r.json();if(!r.ok||!d.ok){message(d.message||"预览失败","error");runBtn.disabled=false;runBtn.textContent="开始抓取";return;}pendingPayload=p;confirmText.textContent=d.message||`预计抓取 ${d.estimate} 条`;confirmPanel.classList.remove("hidden");message("请确认数量后开始抓取","success");runBtn.disabled=false;runBtn.textContent="开始抓取"}catch(e){message("预览失败，请检查服务连接。","error");runBtn.disabled=false;runBtn.textContent="开始抓取"}});
+
+const SOURCE_SCHEDULE_META=[
+  {source:"cnnc",label:"核电公告",fallback:{hour:11,minute:30}},
+  {source:"zfcg",label:"政府采购网",fallback:{hour:14,minute:0}},
+  {source:"kjt",label:"省科技厅",fallback:{hour:13,minute:30}},
+  {source:"gxt",label:"省工信厅",fallback:{hour:13,minute:0}},
+  {source:"plap",label:"军队采购网",fallback:{hour:12,minute:30}},
+  {source:"railway",label:"国铁采购网",fallback:{hour:8,minute:30}},
+];
+const MAX_SLOTS_PER_SOURCE=8;
+const schedBlocksEl=$("sched-source-blocks");
+function pad2(n){return String(Math.max(0,Number(n)||0)).padStart(2,"0");}
+function toTimeValue(slot,fallback){const s=slot&&typeof slot==="object"?slot:fallback;return `${pad2(s.hour??fallback.hour)}:${pad2(s.minute??fallback.minute)}`;}
+function normalizeSlots(value,fallback){
+  let list=[];
+  if(Array.isArray(value)) list=value;
+  else if(value&&typeof value==="object") list=[value];
+  list=list.filter(Boolean).slice(0,MAX_SLOTS_PER_SOURCE);
+  if(!list.length) list=[fallback];
+  return list.map(item=>({hour:Math.max(0,Math.min(23,Number(item.hour)||fallback.hour)),minute:Math.max(0,Math.min(59,Number(item.minute)||fallback.minute))}));
+}
+function ensureSourceBlocks(){
+  if(schedBlocksEl.dataset.ready==="1") return;
+  schedBlocksEl.innerHTML=SOURCE_SCHEDULE_META.map(({source,label})=>`
+    <div class="sched-source-block" data-source="${source}">
+      <div class="sched-source-head">
+        <strong>${label}</strong>
+        <button type="button" class="btn btn-ghost btn-small sched-add" data-source="${source}">+ 增加定时</button>
+      </div>
+      <div class="sched-times-list" id="sched-times-${source}" aria-live="polite"></div>
+    </div>`).join("");
+  schedBlocksEl.dataset.ready="1";
+  schedBlocksEl.addEventListener("click",e=>{
+    const add=e.target.closest(".sched-add");
+    if(add){
+      e.preventDefault();
+      addSourceSlot(add.dataset.source,"08:00");
+      return;
+    }
+  });
+}
+function refreshRemoveState(list){
+  if(!list) return;
+  const rows=list.querySelectorAll(".sched-time-row");
+  const onlyOne=rows.length<=1;
+  rows.forEach(row=>{
+    const btn=row.querySelector(".sched-remove");
+    if(!btn) return;
+    btn.disabled=onlyOne;
+    btn.title=onlyOne?"至少保留一个定时":"删除此时段";
+  });
+}
+function removeSourceSlot(btn){
+  const row=btn.closest(".sched-time-row");
+  const list=row&&row.parentElement;
+  if(!row||!list) return;
+  if(list.querySelectorAll(".sched-time-row").length<=1){
+    $("schedule-msg").textContent="每个来源至少保留一个定时";
+    $("schedule-msg").className="message message-error";
+    refreshRemoveState(list);
+    return;
+  }
+  row.remove();
+  refreshRemoveState(list);
+  $("schedule-msg").textContent="";
+}
+function makeTimeRow(timeValue){
+  const row=document.createElement("div");
+  row.className="sched-time-row";
+  row.innerHTML=`<input type="time" class="sched-time-input" value="${timeValue}"><button type="button" class="btn btn-ghost btn-small sched-remove" title="删除此时段">删除</button>`;
+  const btn=row.querySelector(".sched-remove");
+  btn.addEventListener("click",e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    removeSourceSlot(btn);
+  });
+  return row;
+}
+function addSourceSlot(source,timeValue){
+  const list=$(`sched-times-${source}`);
+  if(!list) return;
+  if(list.querySelectorAll(".sched-time-row").length>=MAX_SLOTS_PER_SOURCE){
+    $("schedule-msg").textContent=`每个来源最多 ${MAX_SLOTS_PER_SOURCE} 个定时`;
+    $("schedule-msg").className="message message-error";
+    return;
+  }
+  list.appendChild(makeTimeRow(timeValue||"08:00"));
+  refreshRemoveState(list);
+}
+function renderSourceTimes(sourceTimes){
+  ensureSourceBlocks();
+  const times=sourceTimes||{};
+  SOURCE_SCHEDULE_META.forEach(({source,fallback})=>{
+    const list=$(`sched-times-${source}`);
+    list.innerHTML="";
+    normalizeSlots(times[source],fallback).forEach(slot=>list.appendChild(makeTimeRow(toTimeValue(slot,fallback))));
+    refreshRemoveState(list);
+  });
+}
+function collectSourceTimes(){
+  const result={};
+  SOURCE_SCHEDULE_META.forEach(({source,fallback})=>{
+    const rows=Array.from(($(`sched-times-${source}`)||{querySelectorAll:()=>[]}).querySelectorAll(".sched-time-row"));
+    const slots=rows.map(row=>{
+      const [hour,minute]=String(row.querySelector(".sched-time-input")?.value||toTimeValue(fallback,fallback)).split(":").map(Number);
+      return {hour:Math.max(0,Math.min(23,hour||0)),minute:Math.max(0,Math.min(59,minute||0))};
+    });
+    const seen=new Set();
+    result[source]=[];
+    slots.forEach(slot=>{
+      const key=`${slot.hour}:${slot.minute}`;
+      if(seen.has(key)) return;
+      seen.add(key);
+      result[source].push(slot);
+    });
+    if(!result[source].length) result[source]=[{...fallback}];
+  });
+  return result;
+}
+async function loadSchedule(){try{const r=await fetch(api("/api/schedule")),d=await r.json();if(!r.ok||!d.ok)throw Error(d.message||"读取失败");const s=d.schedule||{};renderSourceTimes(s.source_times);$("sched-lookback").value=s.lookback_days??3;$("sched-enabled").checked=!!s.enabled;$("schedule-label").textContent=s.label||"";$("schedule-msg").textContent="";}catch(e){$("schedule-label").textContent="定时配置读取失败";$("schedule-msg").textContent=String(e.message||e);$("schedule-msg").className="message message-error";}}
+$("schedule-form").addEventListener("submit",async e=>{e.preventDefault();const btn=$("sched-save");btn.disabled=true;const payload={source_times:collectSourceTimes(),lookback_days:Number($("sched-lookback").value),enabled:$("sched-enabled").checked};try{const r=await fetch(api("/api/schedule"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.message||"保存失败");const s=d.schedule||{};renderSourceTimes(s.source_times);$("schedule-label").textContent=s.label||"";$("schedule-msg").textContent=d.message||"已保存";$("schedule-msg").className="message message-success";}catch(err){$("schedule-msg").textContent=String(err.message||err);$("schedule-msg").className="message message-error";}finally{btn.disabled=false;}});
+ensureSourceBlocks();
+sync();filterSource.value="";$("result-source").textContent="全部来源";loadSchedule();loadMemory();loadDisk();setInterval(()=>{loadMemory();loadDisk();},15000);poll().then(()=>load(1).catch(()=>{}));
+})();
+</script>
+{% endblock %}
