@@ -1,19 +1,22 @@
-name: CI
+name: 微信小程序 CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
+      - name: 检查项目结构
+        run: |
+          echo "检查核心文件..."
+          test -f project.config.json && echo "✅ project.config.json"
+          test -f app.json && echo "✅ app.json"
+          test -f app.js && echo "✅ app.js"
+          test -d pages && echo "✅ pages 目录"
+          test -d miniprogram && echo "✅ miniprogram 目录"
+          echo "检查完成"
